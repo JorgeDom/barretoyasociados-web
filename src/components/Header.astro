@@ -1,0 +1,144 @@
+---
+import { Image } from 'astro:assets';
+import logoMark from '../assets/logo-mark.png';
+import { navLinks, whatsappHref } from '../data/site';
+import ArrowIcon from './ArrowIcon.astro';
+---
+
+<header id="site-header" class="sticky top-0 z-40 bg-white transition-shadow duration-200">
+  <div class="mx-auto flex min-h-[88px] max-w-[1320px] items-center gap-4 px-6 wide:max-w-[1760px] ultra:max-w-[2200px]">
+    <a href="#top" class="flex flex-none items-center gap-3 no-underline">
+      <Image src={logoMark} alt="Barreto y Asociados" height={40} class="h-10 w-auto" loading="eager" />
+      <div class="flex flex-col leading-[1.2]">
+        <span class="text-[15px] font-extrabold text-ink">Barreto y Asociados</span>
+        <span class="text-[11px] text-muted">Agencia de Despachos Aduaneros</span>
+      </div>
+    </a>
+
+    <button
+      id="menu-toggle"
+      type="button"
+      aria-label="Abrir menú"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      class="ml-auto flex cursor-pointer flex-col justify-center gap-[5px] border-none bg-transparent p-2 nav:hidden"
+    >
+      <span class="block h-[2.5px] w-6 rounded-sm bg-ink"></span>
+      <span class="block h-[2.5px] w-6 rounded-sm bg-ink"></span>
+      <span class="block h-[2.5px] w-6 rounded-sm bg-ink"></span>
+    </button>
+
+    <nav aria-label="Principal" class="mx-auto hidden flex-wrap justify-center gap-7 nav:flex">
+      {
+        navLinks.map((lnk) => (
+          <a href={lnk.href} class="nav-link whitespace-nowrap pb-1.5 text-[15.5px] font-semibold no-underline">
+            {lnk.label}
+          </a>
+        ))
+      }
+    </nav>
+    <a
+      href={whatsappHref}
+      target="_blank"
+      rel="noopener"
+      class="hidden min-h-[52px] flex-none items-center gap-2 whitespace-nowrap rounded-xl bg-brand px-[26px] py-[15px] text-[14.5px] font-bold text-white no-underline transition-colors duration-200 hover:bg-brand-dark hover:text-white nav:inline-flex"
+    >
+      Solicitar asesoría
+      <ArrowIcon />
+    </a>
+  </div>
+
+  <nav
+    id="mobile-menu"
+    aria-label="Principal"
+    class="hidden flex-col gap-0.5 border-t border-line bg-white px-6 pt-3 pb-6 nav:hidden!"
+  >
+    {
+      navLinks.map((lnk) => (
+        <a
+          href={lnk.href}
+          class="nav-link border-b border-[#F0F0F0] px-1 py-3.5 text-base font-semibold no-underline"
+        >
+          {lnk.label}
+        </a>
+      ))
+    }
+    <a
+      href={whatsappHref}
+      target="_blank"
+      rel="noopener"
+      class="mt-3.5 flex min-h-[52px] items-center justify-center gap-2 rounded-xl bg-brand px-5 py-[15px] text-center text-[15px] font-bold text-white no-underline hover:text-white"
+    >
+      Solicitar asesoría
+      <ArrowIcon />
+    </a>
+  </nav>
+</header>
+
+<style>
+  .nav-link {
+    color: var(--color-ink);
+    border-bottom: 2.5px solid transparent;
+  }
+  .nav-link.is-active {
+    color: var(--color-brand);
+    border-bottom-color: var(--color-accent);
+  }
+  #mobile-menu .nav-link,
+  #mobile-menu .nav-link.is-active {
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .nav-link:hover {
+    color: var(--color-accent);
+  }
+  #site-header.is-scrolled {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+</style>
+
+<script>
+  const header = document.getElementById('site-header')!;
+  const toggle = document.getElementById('menu-toggle')!;
+  const menu = document.getElementById('mobile-menu')!;
+
+  const setMenu = (open: boolean) => {
+    menu.classList.toggle('hidden', !open);
+    menu.classList.toggle('flex', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+  };
+  toggle.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
+  menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setMenu(false)));
+
+  const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 20);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Scroll-spy: highlight the nav link for the section currently in view
+  const links = document.querySelectorAll<HTMLAnchorElement>('.nav-link');
+  const sections = [...new Set([...links].map((a) => a.getAttribute('href')!))]
+    .map((href) => document.querySelector<HTMLElement>(href))
+    .filter((el): el is HTMLElement => el !== null)
+    .sort((a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
+
+  const setActive = (id: string | null) => {
+    links.forEach((a) => {
+      const active = a.getAttribute('href') === `#${id}`;
+      a.classList.toggle('is-active', active);
+      if (active) a.setAttribute('aria-current', 'location');
+      else a.removeAttribute('aria-current');
+    });
+  };
+
+  const visible = new Map<string, boolean>();
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => visible.set(e.target.id, e.isIntersecting));
+      // Pick the first section (in document order) that intersects the band below the header
+      const current = sections.find((s) => visible.get(s.id));
+      setActive(current ? current.id : null);
+    },
+    { rootMargin: '-90px 0px -55% 0px' },
+  );
+  sections.forEach((s) => observer.observe(s));
+</script>

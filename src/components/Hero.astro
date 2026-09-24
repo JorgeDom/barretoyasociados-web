@@ -1,0 +1,43 @@
+---
+import { Image } from 'astro:assets';
+import heroImage from '../assets/hero-port.jpg';
+import { whatsappHref } from '../data/site';
+---
+
+<section id="top" class="relative h-[clamp(820px,74vw,900px)]">
+  <Image
+    src={heroImage}
+    alt="Vista aérea de un buque portacontenedores en el puerto"
+    widths={[640, 960, 1280, 1920, 2400]}
+    sizes="100vw"
+    loading="eager"
+    fetchpriority="high"
+    class="absolute inset-0 h-full w-full object-cover"
+  />
+  <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,20,19,0.35)_0%,rgba(18,20,19,0.55)_100%)]"></div>
+  <div class="absolute inset-0 flex items-end justify-center px-8 pt-8 pb-14 text-center">
+    <div class="max-w-[720px] text-white">
+      <p class="mb-3 text-[15px] font-medium italic text-accent-soft">43 años de trayectoria</p>
+      <h1 class="m-0 text-[clamp(28px,4.8vw,48px)] leading-[1.1] font-black uppercase">
+        Agencia de Despachos Aduaneros en Asunción
+      </h1>
+      <div class="mt-[22px] flex flex-wrap items-center justify-center gap-3.5">
+        <a
+          href={whatsappHref}
+          target="_blank"
+          rel="noopener"
+          class="rounded-[10px] bg-brand px-[26px] py-[15px] text-[15px] font-bold text-white no-underline hover:bg-brand-dark hover:text-white"
+        >
+          Escribinos por WhatsApp
+        </a>
+        <a
+          href="#servicios"
+          class="inline-flex items-center gap-2 rounded-full bg-accent px-[22px] py-[13px] text-[13.5px] font-semibold text-ink no-underline hover:text-ink hover:brightness-110"
+        >
+          <span class="inline-block h-[9px] w-[9px] rounded-full border-[1.5px] border-current"></span>
+          Ver servicios
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

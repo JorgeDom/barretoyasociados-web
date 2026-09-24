@@ -1,0 +1,35 @@
+---
+import { stats, whatsappHref } from '../data/site';
+---
+
+<section class="pt-[76px] pb-2">
+  <div class="relative overflow-hidden rounded-[20px] bg-brand px-8 py-14 text-center">
+    <div class="absolute -top-[20%] -left-[8%] h-[140%] w-[45%] bg-accent opacity-30 blur-[70px]" aria-hidden="true"></div>
+    <div class="relative z-1">
+      <dl class="m-0 mb-10 flex flex-wrap justify-center gap-10">
+        {
+          stats.map((st) => (
+            <div class="flex flex-col-reverse">
+              <dt class="mt-1.5 text-xs font-semibold tracking-[0.03em] text-on-dark-label uppercase">{st.label}</dt>
+              <dd class="m-0 text-[clamp(28px,3.6vw,38px)] font-black text-white">{st.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <h2 class="mt-0 mb-3 text-[clamp(22px,3.6vw,28px)] font-extrabold text-white uppercase">
+        ¿Listos para tu próxima operación?
+      </h2>
+      <p class="mx-auto mt-0 mb-6 max-w-[520px] text-[15px] leading-[1.7] text-on-dark">
+        Contanos qué necesitás importar, exportar o gestionar en régimen de maquila y te asesoramos sin compromiso.
+      </p>
+      <a
+        href={whatsappHref}
+        target="_blank"
+        rel="noopener"
+        class="inline-block rounded-[10px] bg-accent px-[26px] py-3.5 text-[15px] font-bold text-ink no-underline hover:text-ink hover:brightness-110"
+      >
+        Escribinos por WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
