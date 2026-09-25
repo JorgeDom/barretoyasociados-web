@@ -149,12 +149,12 @@ export const teamIntro =
   'Nuestro equipo está integrado por profesionales con experiencia en comercio exterior y gestión aduanera, comprometidos con brindar un servicio eficiente y personalizado, acompañando cada operación con cercanía y conocimiento técnico.';
 
 export const team = [
-  { name: 'Mirtha Barreto', role: 'CEO · Fundadora', photo: 'team/mirtha-barreto.jpg' },
-  { name: 'Lic. Víctor Diez Pérez', role: 'CFO · Finanzas', photo: 'team/victor-diez-perez.jpg' },
-  { name: 'Ing. Renato Barreto', role: 'Comercio exterior', photo: 'team/renato-barreto.jpg' },
-  { name: 'Carlos Troxler', role: 'Comercio exterior', photo: 'team/carlos-troxler.jpg' },
-  { name: 'David Ozuna', role: 'Comercio exterior · Maquila', photo: 'team/david-ozuna.jpg' },
-  { name: 'Lic. Rocío Rodríguez', role: 'Recursos humanos', photo: 'team/rocio-rodriguez.jpg' },
+  { name: 'Mirtha Barreto', role: 'CEO · Fundadora', photo: 'team/Mirtha_Barreto.png' },
+  { name: 'Lic. Víctor Diez Pérez', role: 'CFO · Finanzas', photo: 'team/Victor_Diez_Perez.png' },
+  { name: 'Ing. Renato Barreto', role: 'Comercio exterior', photo: 'team/Renato_Barreto.png' },
+  { name: 'Carlos Troxler', role: 'Comercio exterior', photo: 'team/Carlos_Troxler.png' },
+  { name: 'David Ozuna', role: 'Comercio exterior · Maquila', photo: 'team/David_Ozuna.png' },
+  { name: 'Lic. Rocío Rodríguez', role: 'Recursos humanos', photo: 'team/Rocio_Rodriguez.png' },
 ];
 
 // Sorted by years of alliance (longest first) when rendered.

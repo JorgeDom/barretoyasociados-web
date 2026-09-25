@@ -8,7 +8,7 @@ import sharp from 'sharp';
 // First matching rule wins. Paths are relative to dist/, with forward slashes.
 const RULES = [
   { test: /^images\/logo[^/]*\.png$/, trim: true, height: 160 },
-  { test: /^images\/team\//, width: 800, height: 1000, fit: 'cover', photo: true },
+  { test: /^images\/team\//, width: 800, height: 800, fit: 'cover', position: 'top', photo: true },
   { test: /^images\/og-image\./, width: 1200, height: 630, fit: 'cover' },
   { test: /^images\//, max: 1200, photo: true },
   { test: /^icons\//, max: 128 },
@@ -28,7 +28,7 @@ async function optimize(file, rule) {
   let img = sharp(input, { failOn: 'none' }).rotate();
   if (rule.trim) img = img.trim();
   if (rule.max) img = img.resize({ width: rule.max, height: rule.max, fit: 'inside', withoutEnlargement: true });
-  else img = img.resize({ width: rule.width, height: rule.height, fit: rule.fit ?? 'inside', withoutEnlargement: true });
+  else img = img.resize({ width: rule.width, height: rule.height, fit: rule.fit ?? 'inside', position: rule.position ?? 'centre', withoutEnlargement: true });
 
   const ext = extname(file).toLowerCase();
   if (ext === '.jpg' || ext === '.jpeg') img = img.jpeg({ quality: 78, mozjpeg: true });

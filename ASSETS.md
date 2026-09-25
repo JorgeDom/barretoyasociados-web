@@ -12,7 +12,8 @@ Decorative graphics (arcs, dot grid, green glow, the hero ring with arrows) are 
 ## Status (updated 2026-09-25)
 
 Received: logo, favicons, `og-image.jpg`, `hero-port.jpg`, `about-document.png`, `historia-colon1.jpg`, and all nine icons.
-Still missing: **the six team photos**. Optional: `logo-white` and an SVG version of the logo.
+Received: the six team photos (`images/team/*.png`).
+Still missing: nothing required. Optional: `logo-white` and an SVG version of the logo.
 
 ## Logo — `public/images/`
 
@@ -36,16 +37,16 @@ Export as **JPG (quality ~80) or WebP**, sRGB, at the size listed. That is alrea
 
 ## Team photos — `public/images/team/`
 
-800 × 1000 (4:5), head and shoulders, same background and framing for all six.
+Square (1:1), head and shoulders, cropped from the top. 800 × 800 ideal; the received files are 480–720 px, which is enough for the ~370 px display size.
 
 | File | Person |
 |---|---|
-| `team/mirtha-barreto.jpg` | Mirtha Barreto (CEO · Fundadora) |
-| `team/victor-diez-perez.jpg` | Lic. Víctor Diez Pérez (CFO) |
-| `team/renato-barreto.jpg` | Ing. Renato Barreto (Comercio exterior) |
-| `team/carlos-troxler.jpg` | Carlos Troxler (Comercio exterior) |
-| `team/david-ozuna.jpg` | David Ozuna (Comercio exterior · Maquila) |
-| `team/rocio-rodriguez.jpg` | Lic. Rocío Rodríguez (Recursos humanos) |
+| `team/Mirtha_Barreto.png` ✅ | Mirtha Barreto (CEO · Fundadora) |
+| `team/Victor_Diez_Perez.png` ✅ | Lic. Víctor Diez Pérez (CFO) |
+| `team/Renato_Barreto.png` ✅ | Ing. Renato Barreto (Comercio exterior) |
+| `team/Carlos_Troxler.png` ✅ | Carlos Troxler (Comercio exterior) |
+| `team/David_Ozuna.png` ✅ | David Ozuna (Comercio exterior · Maquila) |
+| `team/Rocio_Rodriguez.png` ✅ | Lic. Rocío Rodríguez (Recursos humanos) |
 
 ## Icons — `public/icons/`
 
