@@ -1,0 +1,6 @@
+---
+// Motif 3: soft green glow blob, pure CSS.
+interface Props { class?: string }
+const { class: className } = Astro.props;
+---
+<span class:list={['decor', 'decor-glow', className]} aria-hidden="true"></span>

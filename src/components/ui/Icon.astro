@@ -1,0 +1,22 @@
+---
+// Content icon slot. Uses /public/icons/<name>.svg|png|webp if present, otherwise a labeled square.
+// Single-color icons are recolored to the brand green via CSS mask, whatever their original color.
+// Icons are decorative (the adjacent heading carries the meaning), so they're hidden from screen readers.
+import { findPublicFile } from '../../lib/assets';
+
+interface Props {
+  name: string; // file name without extension, e.g. "icon-despacho"
+  size?: number;
+  class?: string;
+}
+
+const { name, size = 48, class: className } = Astro.props;
+const src = findPublicFile('icons', name);
+---
+{src ? (
+  <span class:list={['icon', 'icon--mask', className]} style={`--size:${size}px;--src:url("${src}")`} aria-hidden="true"></span>
+) : (
+  <span class:list={['icon', 'icon--placeholder', className]} style={`--size:${size}px`} aria-hidden="true">
+    <span>{name}.svg</span>
+  </span>
+)}

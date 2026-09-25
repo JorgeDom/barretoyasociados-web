@@ -1,0 +1,36 @@
+---
+// Logo slot: symbol from /public/images/logo.(svg|png) + the company name as live text.
+// variant="white" (dark backgrounds) uses logo-white.* if present; otherwise the color
+// symbol sits on a light disc so its black ring stays visible.
+import { findPublicFile } from '../../lib/assets';
+import { company } from '../../data/site';
+
+interface Props {
+  variant?: 'color' | 'white';
+  class?: string;
+}
+
+const { variant = 'color', class: className } = Astro.props;
+const white = variant === 'white' ? findPublicFile('images', 'logo-white') : null;
+const src = white ?? findPublicFile('images', 'logo');
+const onDisc = variant === 'white' && !white;
+---
+{src ? (
+  <span class:list={['logo', `logo--${variant}`, className]}>
+    <span class:list={['logo__symbol', { 'logo__symbol--disc': onDisc }]}>
+      <img src={src} alt="" width="247" height="100" decoding="async" />
+    </span>
+    <span class="logo__name">
+      <strong>{company.shortName}</strong>
+      <span>{company.descriptor}</span>
+    </span>
+  </span>
+) : (
+  <span class:list={['logo', 'logo--placeholder', `logo--${variant}`, className]} role="img" aria-label={`${company.shortName}, ${company.descriptor}`}>
+    <span class="logo__mark" aria-hidden="true"></span>
+    <span class="logo__text" aria-hidden="true">
+      <strong>{variant === 'white' ? 'logo-white.svg' : 'logo.svg'}</strong>
+      <span>220 × 56 · SVG</span>
+    </span>
+  </span>
+)}

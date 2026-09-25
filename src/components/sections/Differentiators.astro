@@ -1,0 +1,55 @@
+---
+import Icon from '../ui/Icon.astro';
+import Arcs from '../decor/Arcs.astro';
+import { differentiators } from '../../data/site';
+---
+<section class="section diff" id="diferencias" aria-labelledby="diff-title">
+  <div class="container">
+    <div class="diff__panel">
+      <Arcs class="diff__arcs" rings={4} />
+      <div class="section-head">
+        <h2 id="diff-title" data-reveal>Qué nos diferencia</h2>
+      </div>
+      <ul class="diff__grid">
+        {differentiators.map((d, i) => (
+          <li class="diff__item" data-reveal style={`--i:${i}`}>
+            <Icon name={d.icon} size={44} />
+            <h3>{d.title}</h3>
+            <p>{d.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .diff { padding-top: 0; }
+  .diff__panel {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(2.5rem, 6vw, 5rem);
+    border-radius: var(--radius-l);
+    background: var(--green-50);
+  }
+  .diff__panel .section-head { margin-bottom: clamp(2rem, 4vw, 3rem); }
+  :global(.diff__arcs) { width: 460px; right: -170px; top: -270px; transform: rotate(180deg); z-index: 0; color: var(--green-500); opacity: 0.8; }
+
+  .diff__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  .diff__item { display: grid; gap: 0.85rem; align-content: start; padding-top: 1.5rem; border-top: 2px solid var(--green-800); }
+  .diff__item h3 { color: var(--ink); }
+  .diff__item p { color: var(--ink-muted); }
+
+  @media (max-width: 1023px) { .diff__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 599px) {
+    :global(.diff__arcs) { width: 240px; right: -110px; top: -110px; }
+    .diff__grid { grid-template-columns: 1fr; }
+    .diff__panel { border-radius: var(--radius-m); }
+  }
+</style>

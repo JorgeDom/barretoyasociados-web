@@ -1,0 +1,43 @@
+---
+// Photo slot. Renders /public/images/<file> if it exists (any of .jpg/.jpeg/.png/.webp with the
+// same base name), otherwise a labeled placeholder with the expected filename and size. See ASSETS.md.
+import { findPublicFile } from '../../lib/assets';
+
+interface Props {
+  file: string;         // path under /public/images, e.g. "hero-port.jpg" or "team/x.jpg"
+  alt: string;
+  width: number;        // display ratio / intrinsic size of the expected export
+  height: number;
+  class?: string;
+  eager?: boolean;
+}
+
+const { file, alt, width, height, class: className, eager = false } = Astro.props;
+const base = file.replace(/\.[a-z0-9]+$/i, '');
+const src = findPublicFile('images', base, ['jpg', 'jpeg', 'webp', 'png']);
+---
+{src ? (
+  <img
+    class:list={['media', className]}
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    style={`aspect-ratio:${width}/${height}`}
+    loading={eager ? 'eager' : 'lazy'}
+    fetchpriority={eager ? 'high' : undefined}
+    decoding="async"
+  />
+) : (
+  <div
+    class:list={['media', 'placeholder', className]}
+    style={`aspect-ratio:${width}/${height}`}
+    role="img"
+    aria-label={alt}
+  >
+    <span class="placeholder__label" aria-hidden="true">
+      <strong>{file}</strong>
+      <span>{width} × {height}</span>
+    </span>
+  </div>
+)}

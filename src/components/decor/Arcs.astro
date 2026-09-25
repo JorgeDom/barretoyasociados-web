@@ -1,0 +1,25 @@
+---
+// Motif 1: thin concentric arcs, taken from the ring in the logo. Colour via CSS `color`.
+interface Props {
+  class?: string;
+  rings?: number;
+  sweep?: number; // degrees of each arc
+}
+const { class: className, rings = 4, sweep = 220 } = Astro.props;
+const c = 200;
+const arcs = Array.from({ length: rings }, (_, i) => {
+  const r = 190 - i * 26;
+  const start = -90 - sweep / 2 + i * 18;
+  const end = start + sweep - i * 14;
+  const p = (a: number) => [c + r * Math.cos((a * Math.PI) / 180), c + r * Math.sin((a * Math.PI) / 180)];
+  const [x1, y1] = p(start);
+  const [x2, y2] = p(end);
+  const large = end - start > 180 ? 1 : 0;
+  return `M${x1.toFixed(1)} ${y1.toFixed(1)} A${r} ${r} 0 ${large} 1 ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+});
+---
+<svg class:list={['decor', 'decor-arcs', className]} viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+  {arcs.map((d, i) => (
+    <path d={d} fill="none" stroke="currentColor" stroke-width={i === 0 ? 1.5 : 1} stroke-linecap="round" opacity={1 - i * 0.18} />
+  ))}
+</svg>

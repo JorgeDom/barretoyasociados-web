@@ -1,0 +1,141 @@
+---
+import Media from '../ui/Media.astro';
+import DotGrid from '../decor/DotGrid.astro';
+import Glow from '../decor/Glow.astro';
+import WhatsAppGlyph from '../ui/WhatsAppGlyph.astro';
+import { company, whatsappLink } from '../../data/site';
+---
+<section class="hero" id="inicio" aria-labelledby="hero-title">
+  <DotGrid class="hero__dots" cols={9} rows={7} />
+  <Glow class="hero__glow" />
+
+  <div class="container hero__grid">
+    <div class="hero__copy">
+      <p class="hero__kicker">{company.descriptor} en Asunción</p>
+      <h1 id="hero-title">Importar y exportar con quien conoce la aduana desde 1983.</h1>
+      <p class="hero__lede">
+        Asesoría integral en importación, exportación, maquila y regímenes especiales.
+        Acompañamos cada operación con atención personalizada y cumplimiento normativo.
+      </p>
+      <div class="hero__actions">
+        <a class="btn" href={whatsappLink('Hola, quisiera solicitar asesoría para una operación de comercio exterior.')} target="_blank" rel="noopener">
+          <WhatsAppGlyph />
+          Solicitar asesoría
+          <span class="visually-hidden">por WhatsApp (se abre en una nueva pestaña)</span>
+        </a>
+        <a class="btn btn--ghost" href="#servicios">Ver servicios</a>
+      </div>
+    </div>
+
+    <div class="hero__visual">
+      <div class="hero__photo">
+        <div class="hero__photo-inner" data-parallax="0.06">
+          <Media
+            file="hero-port.jpg"
+            alt="Puerto de contenedores con un avión de carga y camiones al atardecer"
+            width={1200}
+            height={1200}
+            eager
+          />
+        </div>
+      </div>
+
+      <!-- Signature: the logo's ring with two arrows (import in, export out), drawn on load -->
+      <svg class="hero__ring" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
+        <path class="ring ring--outer" d="M 38 300 A 262 262 0 0 1 562 300" pathLength="1" />
+        <path class="ring ring--outer ring--late" d="M 562 300 A 262 262 0 0 1 38 300" pathLength="1" />
+        <circle class="ring ring--inner" cx="300" cy="300" r="240" pathLength="1" />
+        <g class="arrow arrow--in">
+          <line x1="-30" y1="400" x2="150" y2="400" />
+          <path d="M 138 386 L 162 400 L 138 414" />
+        </g>
+        <g class="arrow arrow--out">
+          <line x1="440" y1="200" x2="620" y2="200" />
+          <path d="M 608 186 L 632 200 L 608 214" />
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    padding-block: clamp(3rem, 6vw, 5rem) clamp(2rem, 4vw, 3rem);
+    overflow: clip;
+  }
+  :global(.hero__dots) { top: 2.5rem; left: max(0px, calc(50% - 720px)); }
+  :global(.hero__glow) { right: -120px; top: -60px; width: 760px; height: 760px; }
+
+  .hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+  }
+
+  .hero__copy { display: grid; gap: 1.5rem; }
+  .hero__kicker {
+    color: var(--green-800);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .hero__kicker::before {
+    content: '';
+    width: 2.25rem; height: 2px;
+    background: var(--green-500);
+  }
+  .hero h1 { color: var(--ink); max-width: 12ch; }
+  .hero__lede { font-size: var(--step-1); line-height: 1.55; color: var(--ink-muted); max-width: 32em; }
+  .hero__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
+
+  .hero__visual {
+    position: relative;
+    width: min(100%, 560px);
+    justify-self: center;
+    aspect-ratio: 1;
+  }
+  .hero__photo {
+    position: absolute;
+    inset: 12%;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--green-50);
+  }
+  .hero__photo-inner { position: absolute; inset: -7%; will-change: transform; }
+  .hero__photo-inner :global(.placeholder) { height: 100%; border: 0; }
+  .hero__photo-inner :global(.media) { height: 100%; }
+
+  .hero__ring { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .ring { fill: none; stroke-linecap: round; }
+  .ring--outer { stroke: var(--green-800); stroke-width: 14; stroke-dasharray: 0.92 1; stroke-dashoffset: -0.04; }
+  .ring--inner { stroke: var(--green-500); stroke-width: 4; }
+  .arrow line, .arrow path { fill: none; stroke: var(--green-500); stroke-width: 12; stroke-linecap: round; stroke-linejoin: round; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .ring--outer { animation: draw-gap 1.3s var(--ease-out) 0.2s both; }
+    .ring--late { animation-delay: 0.5s; }
+    .ring--inner { animation: draw 1.6s var(--ease-out) 0.35s both; transform-origin: 300px 300px; transform: rotate(-90deg); }
+    .arrow { animation: slide-in 0.9s var(--ease-out) both; }
+    .arrow--in { animation-delay: 1.1s; }
+    .arrow--out { animation-delay: 1.35s; }
+    .hero__copy > * { animation: rise 0.8s var(--ease-out) both; }
+    .hero__copy > :nth-child(2) { animation-delay: 0.08s; }
+    .hero__copy > :nth-child(3) { animation-delay: 0.16s; }
+    .hero__copy > :nth-child(4) { animation-delay: 0.24s; }
+  }
+  @keyframes draw { from { stroke-dasharray: 0 1; } to { stroke-dasharray: 1 0; } }
+  @keyframes draw-gap { from { stroke-dasharray: 0 1; } to { stroke-dasharray: 0.92 1; } }
+  @keyframes slide-in { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: none; } }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+  @media (max-width: 859px) {
+    .hero__grid { grid-template-columns: 1fr; }
+    .hero__visual { width: min(88%, 420px); }
+    .hero h1 { max-width: 16ch; }
+    :global(.hero__glow) { right: -260px; top: -200px; }
+  }
+</style>
