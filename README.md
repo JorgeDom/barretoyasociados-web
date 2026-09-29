@@ -18,6 +18,7 @@ npm run preview   # serve dist/ locally
 - Output directory: `dist`
 - Node version: 22
 - `public/_headers` sets cache and security headers.
+- `SITE_URL` (optional env var): base URL for canonical and share-preview (og:image) links. Defaults to `https://barretoyasociados.com.py`. Set it to `https://barretoyasociados-web.pages.dev` until the real domain is connected, then delete it.
 
 ## Structure
 
