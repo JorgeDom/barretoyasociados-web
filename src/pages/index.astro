@@ -11,10 +11,14 @@ import Team from '../components/sections/Team.astro';
 import Clients from '../components/sections/Clients.astro';
 import Contact from '../components/sections/Contact.astro';
 import Footer from '../components/sections/Footer.astro';
+import { company } from '../data/site';
+import { yearsSinceDate } from '../lib/years';
+
+const age = yearsSinceDate(company.foundingDate);
 ---
 <Base
   title="Barreto y Asociados | Agencia de Despachos Aduaneros en Asunción, Paraguay"
-  description="Agencia de despachos aduaneros con más de 40 años de experiencia en importación, exportación y maquila. Asesoría integral en comercio exterior en Asunción."
+  description={`Agencia de despachos aduaneros con ${age} años de experiencia en importación, exportación y maquila. Asesoría integral en comercio exterior en Asunción.`}
 >
   <Navbar />
   <main id="contenido">

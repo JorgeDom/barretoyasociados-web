@@ -1,8 +1,11 @@
 ---
 import Media from '../ui/Media.astro';
+import DotGrid from '../decor/DotGrid.astro';
+import YearsText from '../ui/YearsText.astro';
 import { history } from '../../data/site';
 ---
 <section class="section history" id="historia" aria-labelledby="history-title">
+  <DotGrid class="history__dots" cols={7} rows={5} />
   <div class="container history__grid">
     <div class="history__aside">
       <div class="history__sticky">
@@ -21,8 +24,8 @@ import { history } from '../../data/site';
         <li class="timeline__item" data-reveal="left" style={`--i:${i === 0 ? 0 : 1}`}>
           <span class="timeline__marker" aria-hidden="true"></span>
           <p class="timeline__when">{h.when}</p>
-          <h3>{h.title}</h3>
-          <p class="timeline__text">{h.text}</p>
+          <h3><YearsText text={h.title} /></h3>
+          <p class="timeline__text"><YearsText text={h.text} /></p>
         </li>
       ))}
     </ol>
@@ -31,6 +34,7 @@ import { history } from '../../data/site';
 
 <style>
   .history { background: linear-gradient(to bottom, var(--white), var(--green-50) 30%, var(--green-50) 70%, var(--white)); }
+  :global(.history__dots) { right: max(1rem, calc(50% - 700px)); bottom: 3rem; }
   .history__grid {
     display: grid;
     grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
@@ -87,6 +91,7 @@ import { history } from '../../data/site';
     .timeline__marker { background: var(--green-800); box-shadow: inset 0 0 0 4px var(--white); }
   }
   @media (max-width: 859px) {
+    :global(.history__dots) { display: none; }
     .history__grid { grid-template-columns: 1fr; }
     .history__sticky { position: static; }
     .history__figure { max-width: 320px; }

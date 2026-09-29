@@ -1,9 +1,11 @@
 ---
 import Icon from '../ui/Icon.astro';
 import DotGrid from '../decor/DotGrid.astro';
+import Glow from '../decor/Glow.astro';
 import { services } from '../../data/site';
 ---
 <section class="section services" id="servicios" aria-labelledby="services-title">
+  <Glow class="services__glow" />
   <div class="container services__grid">
     <div class="services__head">
       <div class="services__sticky">
@@ -33,6 +35,8 @@ import { services } from '../../data/site';
 </section>
 
 <style>
+  .services { overflow: clip; }
+  :global(.services__glow) { left: -260px; top: 18%; }
   .services__grid {
     display: grid;
     grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);

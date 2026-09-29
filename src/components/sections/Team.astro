@@ -1,10 +1,12 @@
 ---
 import Media from '../ui/Media.astro';
 import Glow from '../decor/Glow.astro';
+import DotGrid from '../decor/DotGrid.astro';
 import { team, teamIntro } from '../../data/site';
 ---
 <section class="section team" id="equipo" aria-labelledby="team-title">
   <Glow class="team__glow" />
+  <DotGrid class="team__dots" cols={8} rows={5} />
   <div class="container">
     <div class="section-head">
       <h2 id="team-title" data-reveal>Conozca al equipo</h2>
@@ -28,6 +30,7 @@ import { team, teamIntro } from '../../data/site';
 <style>
   .team { overflow: clip; }
   :global(.team__glow) { left: -220px; top: 30%; width: 640px; height: 640px; }
+  :global(.team__dots) { right: max(1rem, calc(50% - 700px)); top: calc(var(--section-y) + 0.5rem); }
   .team__grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -47,7 +50,10 @@ import { team, teamIntro } from '../../data/site';
   .member h3 { color: var(--ink); }
   .member p { color: var(--green-800); font-weight: 500; }
 
-  @media (max-width: 859px) { .team__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 859px) {
+    :global(.team__dots) { display: none; }
+    .team__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
   @media (max-width: 479px) {
     .member__photo { border-radius: var(--radius-s) 64px var(--radius-s) var(--radius-s); margin-bottom: 0.6rem; }
     .member h3 { font-size: 1rem; }

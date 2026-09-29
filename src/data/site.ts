@@ -8,7 +8,6 @@ export const company = {
   founder: 'Mirtha Barreto',
   foundingDate: '1983-01-18',
   foundingYear: 1983,
-  years: 43,
   url: 'https://barretoyasociados.com.py',
 };
 
@@ -39,14 +38,16 @@ export const nav = [
 
 export const about = {
   paragraphs: [
-    'Somos una agencia de despacho de aduanas con más de 40 años de experiencia, dedicada a brindar asesoría integral en operaciones de importación, exportación, maquila y regímenes especiales.',
+    'Somos una agencia de despacho de aduanas con {edad} años de experiencia, dedicada a brindar asesoría integral en operaciones de importación, exportación, maquila y regímenes especiales.',
     'Acompañamos a cada cliente con un servicio personalizado, eficiente y seguro, basado en el cumplimiento normativo y la responsabilidad profesional.',
   ],
+  // Numbers are derived at render time (see About.astro): 'age' from company.foundingDate,
+  // 'clients' from clients.length. Labels may use {edad} / {alianzaMax} tokens (YearsText.astro).
   stats: [
-    { value: 43, suffix: '', label: 'años de trayectoria en comercio exterior' },
-    { value: 1983, suffix: '', label: 'año de constitución, el 18 de enero', plain: true },
-    { value: 16, suffix: '', label: 'clientes con alianzas de hasta 37 años' },
-  ],
+    { kind: 'age', label: 'años de trayectoria en comercio exterior' },
+    { kind: 'founded', label: 'año de constitución, el 18 de enero' },
+    { kind: 'clients', suffix: '+', label: 'clientes, con alianzas de hasta {alianzaMax} años' },
+  ] as const,
 };
 
 export const services = {
@@ -127,8 +128,8 @@ export const history = [
   },
   {
     when: 'Hoy',
-    title: '43 años de trayectoria',
-    text: 'Relaciones de confianza basadas en seriedad, experiencia y compromiso, respaldadas por 43 años en el comercio exterior.',
+    title: '{edad} años de trayectoria',
+    text: 'Relaciones de confianza basadas en seriedad, experiencia y compromiso, respaldadas por {edad} años en el comercio exterior.',
   },
 ];
 
@@ -157,22 +158,24 @@ export const team = [
   { name: 'Lic. Rocío Rodríguez', role: 'Recursos humanos', photo: 'team/Rocio_Rodriguez.png' },
 ];
 
-// Sorted by years of alliance (longest first) when rendered.
+// `since` = first year of the partnership; years are calculated from it (Clients.astro).
+// Derived from the 2026 presentation's "años de alianza" as 2026 − years. [CONFIRM with client]
+// Sorted by partnership length (longest first) when rendered.
 export const clients = [
-  { name: 'ENVACO S.A.', sector: 'Importación y exportación de papel y cartón corrugado', years: 31 },
-  { name: 'Industrias Gráficas Nobel S.A.', sector: 'Importación de productos para gráfica', years: 31 },
-  { name: 'La Iglesia de Jesucristo de los Santos de los Últimos Días', sector: 'Importaciones por Ley 302/93 y exportaciones varias', years: 37 },
-  { name: 'Asociación de Mejoramiento Mutuo', sector: 'Importación, exportación y maquila de prendas de vestir', years: 30 },
-  { name: 'Preferida S.A.C.I.', sector: 'Maquila de prendas de vestir', years: 7 },
-  { name: 'Láminas Internacionales S.A.', sector: 'Maquila de madera multilaminada', years: 11 },
-  { name: 'Ferretería Industrial S.A.E.', sector: 'Maquinarias agrícolas y productos de ferretería', years: 2 },
-  { name: 'Hornimac S.R.L.', sector: 'Congeladoras y estanterías metálicas', years: 27 },
-  { name: 'Altona Woods', sector: 'Exportación de madera', years: 2 },
-  { name: 'Centro Familiar de Adoración', sector: 'Importación por Ley 302/93 (mercaderías varias)', years: 17 },
-  { name: 'Copipunto S.A.', sector: 'Productos y equipos para imprenta', years: 14 },
-  { name: 'Casa Otto Import – Export S.R.L.', sector: 'Importación de granos', years: 12 },
-  { name: 'Harz S.R.L.', sector: 'Maquila de resinas PVC y estabilizantes', years: 2 },
-  { name: 'Salinas Textil', sector: 'Maquila de mantas y alfombras', years: 6 },
-  { name: 'Amambay Preformas S.A.', sector: 'Maquila de preformas de envases', years: 6 },
-  { name: 'Saron International S.A.', sector: 'Maquila textil', years: 8 },
+  { name: 'ENVACO S.A.', sector: 'Importación y exportación de papel y cartón corrugado', since: 1995 },
+  { name: 'Industrias Gráficas Nobel S.A.', sector: 'Importación de productos para gráfica', since: 1995 },
+  { name: 'La Iglesia de Jesucristo de los Santos de los Últimos Días', sector: 'Importaciones por Ley 302/93 y exportaciones varias', since: 1989 },
+  { name: 'Asociación de Mejoramiento Mutuo', sector: 'Importación, exportación y maquila de prendas de vestir', since: 1996 },
+  { name: 'Preferida S.A.C.I.', sector: 'Maquila de prendas de vestir', since: 2019 },
+  { name: 'Láminas Internacionales S.A.', sector: 'Maquila de madera multilaminada', since: 2015 },
+  { name: 'Ferretería Industrial S.A.E.', sector: 'Maquinarias agrícolas y productos de ferretería', since: 2024 },
+  { name: 'Hornimac S.R.L.', sector: 'Congeladoras y estanterías metálicas', since: 1999 },
+  { name: 'Altona Woods', sector: 'Exportación de madera', since: 2024 },
+  { name: 'Centro Familiar de Adoración', sector: 'Importación por Ley 302/93 (mercaderías varias)', since: 2009 },
+  { name: 'Copipunto S.A.', sector: 'Productos y equipos para imprenta', since: 2012 },
+  { name: 'Casa Otto Import – Export S.R.L.', sector: 'Importación de granos', since: 2014 },
+  { name: 'Harz S.R.L.', sector: 'Maquila de resinas PVC y estabilizantes', since: 2024 },
+  { name: 'Salinas Textil', sector: 'Maquila de mantas y alfombras', since: 2020 },
+  { name: 'Amambay Preformas S.A.', sector: 'Maquila de preformas de envases', since: 2020 },
+  { name: 'Saron International S.A.', sector: 'Maquila textil', since: 2018 },
 ];

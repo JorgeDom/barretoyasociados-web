@@ -1,12 +1,12 @@
 ---
-import Arcs from '../decor/Arcs.astro';
+import Glow from '../decor/Glow.astro';
 import WhatsAppGlyph from '../ui/WhatsAppGlyph.astro';
 import { contact, whatsappLink } from '../../data/site';
 
 const operations = ['Importación', 'Exportación', 'Maquila', 'Regímenes especiales', 'Incentivos fiscales (Ley 60/90)', 'Otra consulta'];
 ---
 <section class="section contact" id="contacto" aria-labelledby="contact-title">
-  <Arcs class="contact__arcs" rings={4} sweep={200} />
+  <Glow class="contact__glow" />
   <div class="container">
     <div class="section-head">
       <h2 id="contact-title" data-reveal>Contacto</h2>
@@ -135,7 +135,7 @@ const operations = ['Importación', 'Exportación', 'Maquila', 'Regímenes espec
 
 <style>
   .contact { overflow: clip; }
-  :global(.contact__arcs) { width: 420px; right: -160px; top: -12rem; color: var(--green-500); opacity: 0.7; }
+  :global(.contact__glow) { left: -200px; top: 35%; width: 700px; height: 700px; }
 
   .contact__grid {
     display: grid;
@@ -225,7 +225,6 @@ const operations = ['Importación', 'Exportación', 'Maquila', 'Regímenes espec
   .contact__map iframe { width: 100%; height: 100%; border: 0; display: block; }
 
   @media (max-width: 959px) {
-    :global(.contact__arcs) { display: none; }
     .contact__grid { grid-template-columns: 1fr; }
   }
   @media (max-width: 599px) {

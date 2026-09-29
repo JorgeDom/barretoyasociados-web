@@ -1,9 +1,11 @@
 ---
 import Logo from '../ui/Logo.astro';
+import Arcs from '../decor/Arcs.astro';
 import { company, contact, nav } from '../../data/site';
 const year = new Date().getFullYear();
 ---
 <footer class="footer">
+  <Arcs class="footer__arcs" rings={5} sweep={220} />
   <div class="container footer__grid">
     <div class="footer__brand">
       <Logo variant="white" />
@@ -36,11 +38,15 @@ const year = new Date().getFullYear();
 <style>
   .footer {
     --focus: var(--white);
+    position: relative;
+    isolation: isolate;
+    overflow: clip;
     background: var(--ink);
     color: rgb(255 255 255 / 0.82);
     padding-block: clamp(3.5rem, 7vw, 5.5rem) 2rem;
     font-size: 0.975rem;
   }
+  :global(.footer__arcs) { width: 520px; right: -200px; top: -240px; transform: rotate(180deg); color: var(--white); opacity: 0.08; }
   .footer a { color: var(--white); text-decoration: none; }
   .footer a:hover { text-decoration: underline; }
   .footer__grid {

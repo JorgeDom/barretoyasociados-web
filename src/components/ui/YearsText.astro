@@ -1,0 +1,22 @@
+---
+// Renders copy with live year tokens:
+//   {edad}        → agency age, from company.foundingDate
+//   {alianzaMax}  → longest client partnership, in years
+// Each number is wrapped so scripts/years.ts can refresh it in the browser.
+import { company, clients } from '../../data/site';
+import { yearsSinceDate, yearsSinceYear } from '../../lib/years';
+
+interface Props { text: string }
+const { text } = Astro.props;
+
+const oldestSince = Math.min(...clients.map((c) => c.since));
+const tokens: Record<string, { value: number; attr: Record<string, string | number> }> = {
+  edad: { value: yearsSinceDate(company.foundingDate), attr: { 'data-years-since': company.foundingDate } },
+  alianzaMax: { value: yearsSinceYear(oldestSince), attr: { 'data-years-since-year': oldestSince } },
+};
+const parts = text.split(/(\{edad\}|\{alianzaMax\})/);
+---
+{parts.map((part) => {
+  const token = tokens[part.replace(/[{}]/g, '')];
+  return token && /^\{\w+\}$/.test(part) ? <span {...token.attr}>{token.value}</span> : part;
+})}

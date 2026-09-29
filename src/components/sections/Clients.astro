@@ -1,12 +1,19 @@
 ---
 import DotGrid from '../decor/DotGrid.astro';
+import Arcs from '../decor/Arcs.astro';
 import { clients } from '../../data/site';
+import { yearsSinceYear } from '../../lib/years';
 
-const sorted = [...clients].sort((a, b) => b.years - a.years || a.name.localeCompare(b.name, 'es'));
+// Bars are relative to the longest partnership; order and proportions only change on rebuild,
+// while the numbers themselves are refreshed in the browser (scripts/years.ts).
+const sorted = clients
+  .map((c) => ({ ...c, years: yearsSinceYear(c.since) }))
+  .sort((a, b) => b.years - a.years || a.name.localeCompare(b.name, 'es'));
 const max = sorted[0].years;
 ---
 <section class="section clients" id="clientes" aria-labelledby="clients-title">
   <DotGrid class="clients__dots" cols={8} rows={5} />
+  <Arcs class="clients__arcs" rings={4} sweep={200} />
   <div class="container">
     <div class="section-head clients__head">
       <h2 id="clients-title" data-reveal>Algunos de nuestros clientes</h2>
@@ -24,7 +31,7 @@ const max = sorted[0].years;
             <p>{c.sector}</p>
           </div>
           <div class="client__years">
-            <span class="client__num">{c.years} {c.years === 1 ? 'año' : 'años'}</span>
+            <span class="client__num" title={`Desde ${c.since}`}><span data-years-since-year={c.since}>{c.years}</span> {c.years === 1 ? 'año' : 'años'}</span>
             <span class="client__bar" aria-hidden="true"><span></span></span>
           </div>
         </li>
@@ -34,13 +41,14 @@ const max = sorted[0].years;
 </section>
 
 <style>
-  .clients { overflow: clip; }
+  .clients { overflow: clip; background: var(--green-50); }
+  :global(.clients__arcs) { width: 420px; left: -290px; bottom: -250px; color: var(--green-500); opacity: 0.6; }
   :global(.clients__dots) { right: max(1rem, calc(50% - 680px)); top: 4rem; }
   .clients__list {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: clamp(2rem, 5vw, 5rem);
-    border-top: 1px solid var(--gray-100);
+    border-top: 1px solid var(--green-100);
   }
   .client {
     display: grid;
@@ -48,7 +56,7 @@ const max = sorted[0].years;
     gap: 1.25rem;
     align-items: center;
     padding: 1.35rem 0;
-    border-bottom: 1px solid var(--gray-100);
+    border-bottom: 1px solid var(--green-100);
   }
   .client__info { display: grid; gap: 0.2rem; }
   .client h3 { font-size: 1.0625rem; color: var(--ink); line-height: 1.35; }
@@ -56,7 +64,7 @@ const max = sorted[0].years;
 
   .client__years { display: grid; gap: 0.45rem; justify-items: start; }
   .client__num { font-weight: 700; color: var(--green-800); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .client__bar { width: 100%; height: 4px; border-radius: 4px; background: var(--gray-100); overflow: hidden; }
+  .client__bar { width: 100%; height: 4px; border-radius: 4px; background: var(--white); overflow: hidden; }
   .client__bar span {
     display: block; height: 100%;
     width: calc(var(--w) * 100%);
