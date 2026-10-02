@@ -1,0 +1,201 @@
+---
+import Logo from '../ui/Logo.astro';
+import WhatsAppGlyph from '../ui/WhatsAppGlyph.astro';
+import { nav, whatsappLink } from '../../data/site';
+---
+<header class="site-header" data-site-header>
+  <div class="container site-header__inner">
+    <a href="#inicio" class="site-header__brand" aria-label="Barreto y Asociados, ir al inicio">
+      <Logo />
+    </a>
+
+    <nav class="site-nav" aria-label="Principal">
+      <button
+        class="site-nav__toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-menu"
+        data-menu-toggle
+      >
+        <span class="site-nav__bars" aria-hidden="true"><span></span></span>
+        <span class="visually-hidden">Abrir menú</span>
+      </button>
+
+      <div class="site-nav__panel" id="site-menu" data-menu>
+        <ul class="site-nav__list">
+          {nav.map((item) => (
+            <li><a href={item.href} data-nav-link>{item.label}</a></li>
+          ))}
+        </ul>
+        <a class="btn site-nav__cta" href={whatsappLink()} target="_blank" rel="noopener">
+          <WhatsAppGlyph />
+          Consultar por WhatsApp
+          <span class="visually-hidden">(se abre en una nueva pestaña)</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+  const label = toggle?.querySelector('.visually-hidden');
+
+  const setOpen = (open: boolean) => {
+    if (!toggle || !menu) return;
+    toggle.setAttribute('aria-expanded', String(open));
+    menu.classList.toggle('is-open', open);
+    document.body.classList.toggle('menu-open', open);
+    if (label) label.textContent = open ? 'Cerrar menú' : 'Abrir menú';
+  };
+
+  toggle?.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+  menu?.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('a')) setOpen(false);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') {
+      setOpen(false);
+      toggle.focus();
+    }
+  });
+  window.matchMedia('(min-width: 960px)').addEventListener('change', (e) => {
+    if (e.matches) setOpen(false);
+  });
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    height: var(--nav-h);
+    background: rgb(255 255 255 / 0.9);
+    backdrop-filter: saturate(1.4) blur(10px);
+    -webkit-backdrop-filter: saturate(1.4) blur(10px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 200ms ease, box-shadow 200ms ease;
+  }
+  .site-header:global(.is-scrolled) {
+    border-bottom-color: var(--gray-100);
+    box-shadow: 0 6px 24px -18px rgb(30 30 30 / 0.5);
+  }
+  .site-header__inner {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+  .site-header__brand { display: inline-flex; border-radius: 999px; text-decoration: none; }
+
+  .site-nav__list {
+    display: flex;
+    gap: 0.25rem;
+  }
+  .site-nav__list a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 0.8rem;
+    color: var(--ink);
+    font-weight: 500;
+    font-size: 0.975rem;
+    text-decoration: none;
+  }
+  .site-nav__list a::after {
+    content: '';
+    position: absolute;
+    left: 0.8rem; right: 0.8rem; bottom: 8px;
+    height: 2px;
+    background: var(--green-500);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 250ms var(--ease-out);
+  }
+  .site-nav__list a:hover::after,
+  .site-nav__list a[aria-current]::after { transform: scaleX(1); }
+  .site-nav__list a[aria-current] { color: var(--green-800); }
+
+  .site-nav__panel { display: flex; align-items: center; gap: 1rem; }
+  .site-nav__cta { min-height: 44px; padding-inline: 1.15rem; font-size: 0.95rem; }
+
+  .site-nav__toggle {
+    display: none;
+    width: 48px; height: 48px;
+    border: 1.5px solid var(--gray-100);
+    border-radius: 50%;
+    background: var(--white);
+    cursor: pointer;
+  }
+  .site-nav__bars { position: relative; display: block; width: 20px; height: 14px; margin: auto; }
+  .site-nav__bars::before,
+  .site-nav__bars::after,
+  .site-nav__bars span {
+    content: '';
+    position: absolute; left: 0;
+    width: 100%; height: 2px;
+    background: var(--green-800);
+    border-radius: 2px;
+    transition: transform 250ms var(--ease-out), opacity 150ms ease;
+  }
+  .site-nav__bars::before { top: 0; }
+  .site-nav__bars span { top: 6px; }
+  .site-nav__bars::after { bottom: 0; }
+  [aria-expanded='true'] .site-nav__bars::before { transform: translateY(6px) rotate(45deg); }
+  [aria-expanded='true'] .site-nav__bars span { opacity: 0; }
+  [aria-expanded='true'] .site-nav__bars::after { transform: translateY(-6px) rotate(-45deg); }
+
+  @media (max-width: 959px) {
+    .site-nav__toggle { display: block; }
+    .site-nav__panel {
+      position: fixed;
+      inset: var(--nav-h) 0 auto 0;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1.5rem;
+      padding: 1.5rem var(--gutter) 2rem;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-100);
+      box-shadow: 0 24px 40px -24px rgb(30 30 30 / 0.35);
+      visibility: hidden;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: opacity 200ms ease, transform 250ms var(--ease-out), visibility 0s linear 250ms;
+    }
+    .site-nav__panel:global(.is-open) {
+      visibility: visible;
+      opacity: 1;
+      transform: none;
+      transition: opacity 200ms ease, transform 250ms var(--ease-out);
+    }
+    .site-nav__list { flex-direction: column; }
+    .site-nav__list a { font-size: 1.15rem; padding-inline: 0; min-height: 48px; border-bottom: 1px solid var(--gray-100); }
+    .site-nav__list a::after { display: none; }
+    .site-nav__list a[aria-current] { font-weight: 600; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .site-nav__panel, .site-nav__panel:global(.is-open) { transition: none; transform: none; }
+  }
+
+  /* Over the hero photo: transparent bar, white type and logo. Only with JS (it is what
+     flips .is-scrolled) and never while the mobile menu is open. */
+  .site-header { transition: background-color 300ms ease, border-color 300ms ease, box-shadow 300ms ease, backdrop-filter 300ms ease; }
+  :global(.js body:not(.menu-open)) .site-header:not(:global(.is-scrolled)) {
+    --focus: var(--white);
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-bottom-color: transparent;
+    box-shadow: none;
+  }
+  :global(.js body:not(.menu-open)) .site-header:not(:global(.is-scrolled)) :global(.logomark) { --lm-ring: #fff; --lm-inner: #fff; }
+  :global(.js body:not(.menu-open)) .site-header:not(:global(.is-scrolled)) :global(.logo__name strong),
+  :global(.js body:not(.menu-open)) .site-header:not(:global(.is-scrolled)) :global(.logo__name span) { color: var(--white); }
+  @media (min-width: 960px) {
+    :global(.js body:not(.menu-open)) .site-header:not(:global(.is-scrolled)) .site-nav__list a { color: var(--white); }
+    :global(.js body:not(.menu-open)) .site-header:not(:global(.is-scrolled)) .site-nav__cta { --btn-bg: var(--white); --btn-fg: var(--green-800); border-color: var(--white); }
+  }
+</style>

@@ -1,0 +1,6 @@
+---
+// Motif 2: dot grid (from the presentation deck), pure CSS.
+interface Props { class?: string; cols?: number; rows?: number }
+const { class: className, cols = 8, rows = 6 } = Astro.props;
+---
+<span class:list={['decor', 'decor-dots', className]} style={`--cols:${cols};--rows:${rows}`} aria-hidden="true"></span>

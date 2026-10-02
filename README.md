@@ -1,49 +1,18 @@
-# Barreto y Asociados: landing page
+# Barreto y Asociados — landing page
 
-Single-page site for Barreto T y Asociados S.A., Agencia de Despachos Aduaneros (Asunción).
-Built with Astro as static output, with no UI framework and no animation library.
+Two versions of the site live side by side, each a self-contained Astro project:
 
-## Run locally
+| Folder | What it is |
+|---|---|
+| `v1/` | The version live at barretoyasociados-web.pages.dev (as of 2026-09-29). |
+| `v2/` | Client feedback round: full-bleed photo hero with animated logo, services with photos, photo band, image behind Misión/Visión. |
 
-```bash
+Run either one:
+
+```
+cd v1   # or v2
 npm install
-npm run dev       # http://localhost:4321
-npm run build     # production build → dist/
-npm run preview   # serve dist/ locally
+npm run dev
 ```
 
-## Deploy (Cloudflare Pages)
-
-- Build command: `npm run build`
-- Output directory: `dist`
-- Node version: 22
-- `public/_headers` sets cache and security headers.
-- `SITE_URL` (optional env var): base URL for canonical and share-preview (og:image) links. Defaults to `https://barretoyasociados.com.py`. Set it to `https://barretoyasociados-web.pages.dev` until the real domain is connected, then delete it.
-
-## Structure
-
-```
-src/
-  data/site.ts              all copy and business data (edit text here)
-  pages/index.astro         section order
-  layouts/Base.astro        <head>, SEO, JSON-LD, fonts
-  components/sections/      one file per section
-  components/ui/            Media / Icon / Logo slots (see ASSETS.md)
-  components/decor/         the three decorative motifs: Arcs, DotGrid, Glow
-  scripts/motion.ts         scroll reveals, nav state, timeline progress, parallax, count-up
-  scripts/contact-form.ts   form validation + UI states
-  lib/contact-submit.ts     ← the ONLY file to change to wire the form to a backend
-  styles/global.css         tokens, base, buttons, placeholders, reveal
-```
-
-## Contact form
-
-The UI and validation are complete. `submitContact()` in `src/lib/contact-submit.ts` currently returns
-`not-configured`, so the form offers to send the message by WhatsApp or e-mail with the text already filled in.
-To go live, replace that function's body with a `fetch` to a Pages Function or form service.
-The file's header comment has an example. The honeypot field `sitio_web` should be rejected server-side.
-
-## Motion and accessibility
-
-- All motion is disabled under `prefers-reduced-motion`. Without JS, all content is visible.
-- The small-text color rules follow the brand notes: `#0DA94B` is used only for decoration, icons and bars, never for text.
+**Cloudflare Pages:** set *Settings → Builds → Root directory* to the folder that should be live (`v1` or `v2`). Build command `npm run build`, output `dist`.

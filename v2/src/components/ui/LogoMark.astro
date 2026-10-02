@@ -1,0 +1,93 @@
+---
+// Vector redraw of the Barreto y Asociados symbol (ring + import/export arrows), traced from
+// public/images/logo.png so it can be animated. Geometry is in the logo's own pixel space.
+//   animate   → intro: arcs draw in, ring follows, arrows slide in; then a gentle arrow "flow" loop
+//   tone      → 'dark' (black arcs, for light backgrounds) or 'light' (white arcs, for photos/dark)
+// Colors are CSS variables so the navbar can switch tone when it scrolls past the hero.
+interface Props {
+  animate?: boolean;
+  tone?: 'dark' | 'light';
+  class?: string;
+  title?: string;
+}
+const { animate = false, tone = 'dark', class: className, title } = Astro.props;
+
+const cx = 873;
+const cy = 357;
+const pt = (r: number, deg: number) => {
+  const a = (deg * Math.PI) / 180;
+  return `${(cx + r * Math.cos(a)).toFixed(1)} ${(cy + r * Math.sin(a)).toFixed(1)}`;
+};
+const arc = (r: number, from: number, to: number) =>
+  `M${pt(r, from)} A${r} ${r} 0 ${to - from > 180 ? 1 : 0} 1 ${pt(r, to)}`;
+
+// Outer black ring: two arcs with gaps left and right where the arrows pass.
+const outerTop = arc(318, 200, 340);
+const outerBottom = arc(318, 20, 160);
+// Inner dark-green ring, open on the left where the import arrow enters.
+const inner = arc(182, 200, 520);
+---
+<svg
+  class:list={['logomark', `logomark--${tone}`, { 'logomark--animate': animate }, className]}
+  viewBox="0 0 1769 715"
+  role={title ? 'img' : undefined}
+  aria-label={title}
+  aria-hidden={title ? undefined : 'true'}
+  focusable="false"
+>
+  <path class="lm-outer lm-outer--top" d={outerTop} pathLength="1" />
+  <path class="lm-outer lm-outer--bottom" d={outerBottom} pathLength="1" />
+  <path class="lm-inner" d={inner} pathLength="1" />
+  <g class="lm-arrow lm-arrow--in">
+    <polygon points="3,283 335,283 300,192 680,360 300,530 335,438 3,438" />
+  </g>
+  <g class="lm-arrow lm-arrow--out">
+    <polygon points="1157,283 1419,283 1384,192 1764,359 1384,528 1419,435 1157,435" />
+  </g>
+</svg>
+
+<style>
+  .logomark {
+    --lm-ring: #1e1e1e;
+    --lm-inner: var(--green-800);
+    --lm-arrow: var(--green-500);
+    display: block;
+    height: auto;
+    overflow: visible;
+  }
+  .logomark--light { --lm-ring: #ffffff; --lm-inner: #ffffff; }
+  .lm-outer { fill: none; stroke: var(--lm-ring); stroke-width: 56; transition: stroke 250ms ease; }
+  .lm-inner { fill: none; stroke: var(--lm-inner); stroke-width: 98; transition: stroke 250ms ease; }
+  .lm-arrow { fill: var(--lm-arrow); transform-box: fill-box; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .logomark--animate .lm-outer,
+    .logomark--animate .lm-inner {
+      stroke-dasharray: 1 1;
+      animation: lm-draw 1.2s cubic-bezier(0.65, 0, 0.35, 1) both;
+    }
+    .logomark--animate .lm-outer--top { animation-delay: 0.15s; }
+    .logomark--animate .lm-outer--bottom { animation-delay: 0.3s; }
+    .logomark--animate .lm-inner { animation-duration: 1.4s; animation-delay: 0.45s; }
+
+    .logomark--animate .lm-arrow--in {
+      animation:
+        lm-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 1.25s both,
+        lm-flow 4.5s ease-in-out 3.5s infinite;
+    }
+    .logomark--animate .lm-arrow--out {
+      animation:
+        lm-out 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 1.55s both,
+        lm-flow 4.5s ease-in-out 3.8s infinite;
+    }
+  }
+  @keyframes lm-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  @keyframes lm-in { from { opacity: 0; transform: translateX(-45%); } to { opacity: 1; transform: none; } }
+  @keyframes lm-out { from { opacity: 0; transform: translateX(-35%); } to { opacity: 1; transform: none; } }
+  /* Arrows "push" forward then settle: import → into the ring, export → out to the world */
+  @keyframes lm-flow {
+    0%, 70%, 100% { transform: none; }
+    80% { transform: translateX(7%); }
+    90% { transform: translateX(-1.5%); }
+  }
+</style>

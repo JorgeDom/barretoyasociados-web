@@ -1,0 +1,235 @@
+---
+import Glow from '../decor/Glow.astro';
+import WhatsAppGlyph from '../ui/WhatsAppGlyph.astro';
+import { contact, whatsappLink } from '../../data/site';
+
+const operations = ['Importación', 'Exportación', 'Maquila', 'Regímenes especiales', 'Incentivos fiscales (Ley 60/90)', 'Otra consulta'];
+---
+<section class="section contact" id="contacto" aria-labelledby="contact-title">
+  <Glow class="contact__glow" />
+  <div class="container">
+    <div class="section-head">
+      <h2 id="contact-title" data-reveal>Contacto</h2>
+      <p class="lede" data-reveal style="--i:1">
+        Cuéntenos qué necesita importar, exportar o regularizar. Le respondemos con los pasos a seguir.
+      </p>
+    </div>
+
+    <div class="contact__grid">
+      <form
+        class="form"
+        id="contact-form"
+        data-contact-form
+        data-email={contact.email}
+        data-whatsapp={contact.whatsappNumber}
+        aria-describedby="form-note"
+        data-reveal
+      >
+        <p class="form__note" id="form-note">Los campos marcados con <span aria-hidden="true">*</span><span class="visually-hidden">asterisco</span> son obligatorios.</p>
+
+        <div class="form__row">
+          <div class="field">
+            <label for="f-nombre">Nombre y apellido <span class="req" aria-hidden="true">*</span></label>
+            <input id="f-nombre" name="nombre" type="text" autocomplete="name" required aria-describedby="f-nombre-error" />
+            <p class="field__error" id="f-nombre-error" hidden></p>
+          </div>
+          <div class="field">
+            <label for="f-empresa">Empresa</label>
+            <input id="f-empresa" name="empresa" type="text" autocomplete="organization" />
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="field">
+            <label for="f-correo">Correo electrónico <span class="req" aria-hidden="true">*</span></label>
+            <input id="f-correo" name="correo" type="email" autocomplete="email" inputmode="email" required aria-describedby="f-correo-error" />
+            <p class="field__error" id="f-correo-error" hidden></p>
+          </div>
+          <div class="field">
+            <label for="f-telefono">Teléfono</label>
+            <input id="f-telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel" aria-describedby="f-telefono-hint f-telefono-error" />
+            <p class="field__hint" id="f-telefono-hint">Ej.: 0981 123 456</p>
+            <p class="field__error" id="f-telefono-error" hidden></p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="f-operacion">Tipo de operación</label>
+          <select id="f-operacion" name="operacion">
+            <option value="">Seleccione una opción</option>
+            {operations.map((o) => <option value={o}>{o}</option>)}
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="f-mensaje">Consulta <span class="req" aria-hidden="true">*</span></label>
+          <textarea id="f-mensaje" name="mensaje" rows="5" required minlength="10" aria-describedby="f-mensaje-error"></textarea>
+          <p class="field__error" id="f-mensaje-error" hidden></p>
+        </div>
+
+        <!-- Honeypot: hidden from people, tempting for bots. Check it server-side once a backend exists. -->
+        <div class="form__hp" aria-hidden="true">
+          <label for="f-sitio">Sitio web</label>
+          <input id="f-sitio" name="sitio_web" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="form__actions">
+          <button class="btn" type="submit" data-submit>
+            <span data-submit-label>Enviar consulta</span>
+          </button>
+        </div>
+
+        <div class="form__status" role="status" aria-live="polite" data-status hidden></div>
+      </form>
+
+      <aside class="contact__info" aria-label="Datos de contacto" data-reveal style="--i:1">
+        <ul class="contact__list">
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+            <div>
+              <span class="contact__label">Oficina</span>
+              <a href={contact.mapsLink} target="_blank" rel="noopener">
+                {contact.addressLine1}<br />{contact.addressLine2}
+                <span class="visually-hidden">(abre Google Maps en una nueva pestaña)</span>
+              </a>
+            </div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 3.5 9 3l1.6 4-2 1.3a11 11 0 0 0 5.1 5.1l1.3-2 4 1.6-.5 2.4a2 2 0 0 1-2 1.6A15.5 15.5 0 0 1 5 5.5a2 2 0 0 1 1.6-2Z"/></svg>
+            <div>
+              <span class="contact__label">Teléfono</span>
+              <a href={contact.phoneHref}>{contact.phoneDisplay}</a>
+            </div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg>
+            <div>
+              <span class="contact__label">Correo</span>
+              <a href={`mailto:${contact.email}`}>{contact.email.split('@')[0]}@<wbr />{contact.email.split('@')[1]}</a>
+            </div>
+          </li>
+        </ul>
+
+        <a class="btn contact__wa" href={whatsappLink()} target="_blank" rel="noopener">
+          <WhatsAppGlyph />
+          Escribir por WhatsApp
+          <span class="visually-hidden">(se abre en una nueva pestaña)</span>
+        </a>
+
+        <div class="contact__map">
+          <iframe
+            src={contact.mapsEmbed}
+            title="Mapa: Benjamín Constant 962, Asunción"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<script>
+  import '../../scripts/contact-form';
+</script>
+
+<style>
+  .contact { overflow: clip; }
+  :global(.contact__glow) { left: -200px; top: 35%; width: 700px; height: 700px; }
+
+  .contact__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: start;
+  }
+
+  /* Form */
+  .form {
+    display: grid;
+    gap: 1.25rem;
+    padding: clamp(1.5rem, 4vw, 2.75rem);
+    background: var(--white);
+    border: 1px solid var(--gray-100);
+    border-radius: var(--radius-l);
+    box-shadow: 0 30px 60px -40px rgb(24 95 53 / 0.35);
+  }
+  .form__note { font-size: var(--step--1); color: var(--ink-muted); }
+  .form__row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+  .field { display: grid; gap: 0.4rem; align-content: start; }
+  .field label { font-weight: 600; font-size: 0.95rem; }
+  .req { color: var(--green-800); }
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    min-height: 48px;
+    padding: 0.7rem 0.9rem;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--ink);
+    background: var(--white);
+    border: 1.5px solid var(--gray-300);
+    border-radius: var(--radius-s);
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+  }
+  .field textarea { resize: vertical; min-height: 8rem; }
+  .field select { appearance: none; background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23185F35' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 0.8rem center / 1.1rem; padding-right: 2.5rem; }
+  .field input:hover, .field select:hover, .field textarea:hover { border-color: var(--ink-muted); }
+  .field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible {
+    outline: none;
+    border-color: var(--green-800);
+    box-shadow: 0 0 0 3px var(--green-100);
+  }
+  .field [aria-invalid='true'] { border-color: #b3261e; }
+  .field [aria-invalid='true']:focus-visible { box-shadow: 0 0 0 3px #f6d6d3; }
+  .field__hint { font-size: var(--step--1); color: var(--ink-muted); }
+  .field__error { font-size: var(--step--1); font-weight: 500; color: #b3261e; } /* 6.4:1 on white */
+  .field__error::before { content: '! '; font-weight: 700; }
+
+  .form__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .form__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+  .form [data-submit][aria-busy='true'] { opacity: 0.7; cursor: progress; }
+
+  .form__status {
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-m);
+    background: var(--green-50);
+    border: 1px solid var(--green-100);
+  }
+  .form__status :global(p + p) { margin-top: 0.5rem; }
+  .form__status :global(.form__status-links) { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin-top: 0.75rem; font-weight: 600; }
+  .form__status:global(.is-error) { background: #fdf1f0; border-color: #f6d6d3; }
+
+  /* Info */
+  .contact__info { display: grid; gap: 1.75rem; }
+  .contact__list { display: grid; gap: 1.5rem; }
+  .contact__list li { display: grid; grid-template-columns: 44px 1fr; gap: 1rem; align-items: start; }
+  .contact__list svg {
+    width: 44px; height: 44px;
+    padding: 10px;
+    border-radius: 50%;
+    background: var(--green-50);
+    fill: none; stroke: var(--green-800); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .contact__label { display: block; font-size: var(--step--1); color: var(--ink-muted); }
+  .contact__list a { font-weight: 600; overflow-wrap: anywhere; }
+  .contact__wa { justify-self: start; }
+  .contact__map {
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-m);
+    overflow: hidden;
+    border: 1px solid var(--gray-100);
+    background: var(--green-50);
+  }
+  .contact__map iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+  @media (max-width: 959px) {
+    .contact__grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 599px) {
+    .form__row { grid-template-columns: 1fr; }
+    .contact__list a { font-size: 0.95rem; }
+    .form { border-radius: var(--radius-m); }
+  }
+</style>

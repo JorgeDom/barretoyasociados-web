@@ -1,0 +1,174 @@
+---
+// Full-bleed cinematic hero (pattern: Ferrari "hero-band-cinema" / Tesla full-viewport hero).
+// Photo (or optional looping video) spans the full width at every size; headline floats over a
+// green scrim; the animated logo mark opens the sequence.
+import LogoMark from '../ui/LogoMark.astro';
+import WhatsAppGlyph from '../ui/WhatsAppGlyph.astro';
+import { findPublicFile } from '../../lib/assets';
+import { company, whatsappLink } from '../../data/site';
+
+// Optional: drop /public/images/hero.mp4 (and hero.webm) to replace the still photo with a loop.
+const videoMp4 = findPublicFile('images', 'hero', ['mp4']);
+const videoWebm = findPublicFile('images', 'hero', ['webm']);
+const alt = 'Vista aérea de un puerto de contenedores con un buque de carga entrando al muelle';
+---
+<section class="hero" id="inicio" aria-labelledby="hero-title">
+  <div class="hero__media" aria-hidden={videoMp4 ? 'true' : undefined}>
+    <div class="hero__media-inner" data-parallax="0.25">
+      {videoMp4 ? (
+        <video class="hero__video" autoplay muted loop playsinline preload="metadata" poster="/images/hero-wide-1600.jpg" data-hero-video>
+          {videoWebm && <source src={videoWebm} type="video/webm" />}
+          <source src={videoMp4} type="video/mp4" />
+        </video>
+      ) : (
+        <img
+          class="hero__img"
+          src="/images/hero-wide-1600.jpg"
+          srcset="/images/hero-wide-960.jpg 960w, /images/hero-wide-1600.jpg 1600w, /images/hero-wide.jpg 2560w"
+          sizes="100vw"
+          alt={alt}
+          width="2560"
+          height="1706"
+          fetchpriority="high"
+          decoding="async"
+        />
+      )}
+    </div>
+  </div>
+  <div class="hero__scrim" aria-hidden="true"></div>
+
+  <div class="container hero__content">
+    <LogoMark animate tone="light" class="hero__mark" />
+    <p class="hero__kicker">{company.descriptor} en Asunción</p>
+    <h1 id="hero-title">Importar y exportar con quien conoce la aduana desde 1983.</h1>
+    <p class="hero__lede">
+      Asesoría integral en importación, exportación, maquila y regímenes especiales.
+      Acompañamos cada operación con atención personalizada y cumplimiento normativo.
+    </p>
+    <div class="hero__actions">
+      <a class="btn btn--on-dark" href={whatsappLink('Hola, quisiera solicitar asesoría para una operación de comercio exterior.')} target="_blank" rel="noopener">
+        <WhatsAppGlyph />
+        Solicitar asesoría
+        <span class="visually-hidden">por WhatsApp (se abre en una nueva pestaña)</span>
+      </a>
+      <a class="btn btn--ghost-light" href="#servicios">Ver servicios</a>
+    </div>
+  </div>
+
+  <a class="hero__scroll" href="#nosotros">
+    <span>Ver más</span>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+  </a>
+</section>
+
+<script>
+  // Respect reduced motion for the optional background video.
+  const video = document.querySelector<HTMLVideoElement>('[data-hero-video]');
+  const rm = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const sync = () => { if (!video) return; if (rm.matches) video.pause(); else video.play().catch(() => {}); };
+  sync();
+  rm.addEventListener('change', sync);
+</script>
+
+<style>
+  .hero {
+    --slant: clamp(28px, 5vw, 72px);
+    --focus: var(--white);
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    align-items: end;
+    min-height: clamp(620px, 100svh, 980px);
+    margin-top: calc(var(--nav-h) * -1); /* slide under the transparent navbar */
+    padding: calc(var(--nav-h) + 3rem) 0 calc(var(--slant) + clamp(4rem, 9vh, 7rem));
+    color: var(--white);
+    overflow: clip;
+    background: var(--green-950);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--slant)), 0 100%);
+  }
+
+  /* Media */
+  .hero__media { position: absolute; inset: 0; z-index: -2; overflow: hidden; }
+  .hero__media-inner { position: absolute; inset: -12% 0 -12% 0; will-change: transform; }
+  .hero__img, .hero__video { width: 100%; height: 100%; object-fit: cover; object-position: 60% 50%; display: block; }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__img, .hero__video { animation: hero-zoom 14s cubic-bezier(0.2, 0.6, 0.2, 1) both; }
+  }
+  @keyframes hero-zoom { from { transform: scale(1.14); } to { transform: scale(1); } }
+
+  /* Scrim: deep green from the left and bottom so white text always passes contrast */
+  .hero__scrim {
+    position: absolute; inset: 0; z-index: -1;
+    background:
+      linear-gradient(90deg, rgb(14 58 32 / 0.92) 0%, rgb(14 58 32 / 0.78) 38%, rgb(14 58 32 / 0.25) 70%, rgb(14 58 32 / 0.1) 100%),
+      linear-gradient(0deg, rgb(14 58 32 / 0.7) 0%, rgb(14 58 32 / 0) 45%),
+      linear-gradient(180deg, rgb(14 58 32 / 0.55) 0%, rgb(14 58 32 / 0) 22%);
+  }
+
+  /* Content */
+  .hero__content { display: grid; gap: 1.35rem; justify-items: start; }
+  .hero__content > * { max-width: 40rem; }
+  :global(.hero__mark) { width: clamp(150px, 18vw, 230px); margin-bottom: 0.5rem; filter: drop-shadow(0 6px 24px rgb(0 0 0 / 0.25)); }
+  .hero__kicker {
+    display: flex; align-items: center; gap: 0.75rem;
+    font-weight: 600;
+    color: rgb(255 255 255 / 0.92);
+  }
+  .hero__kicker::before { content: ''; width: 2.25rem; height: 2px; background: var(--green-500); }
+  .hero h1 {
+    color: var(--white);
+    max-width: 14ch;
+    font-size: clamp(2.6rem, 1.4rem + 5vw, 5.25rem);
+    text-shadow: 0 2px 30px rgb(0 0 0 / 0.25);
+  }
+  .hero__lede { font-size: var(--step-1); line-height: 1.55; color: rgb(255 255 255 / 0.9); max-width: 34em; }
+  .hero__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
+
+  /* Light ghost button for use on photos */
+  .btn--ghost-light {
+    --btn-bg: rgb(255 255 255 / 0.08);
+    --btn-fg: var(--white);
+    border-color: rgb(255 255 255 / 0.7);
+    backdrop-filter: blur(6px);
+  }
+  .btn--ghost-light:hover { --btn-bg: rgb(255 255 255 / 0.18); }
+
+  /* Scroll cue */
+  .hero__scroll {
+    position: absolute;
+    left: 50%;
+    bottom: calc(var(--slant) + 1rem);
+    translate: -50% 0;
+    display: grid; justify-items: center; gap: 0.15rem;
+    min-width: 44px; min-height: 44px;
+    color: rgb(255 255 255 / 0.85);
+    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+  .hero__scroll svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .hero__scroll:hover { color: var(--white); }
+
+  /* Entrance (after the logo starts drawing) */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__content > :not(:global(.hero__mark)) { animation: hero-rise 0.9s var(--ease-out) both; }
+    .hero__kicker { animation-delay: 0.5s !important; }
+    .hero h1 { animation-delay: 0.65s !important; }
+    .hero__lede { animation-delay: 0.85s !important; }
+    .hero__actions { animation-delay: 1s !important; }
+    .hero__scroll { animation: hero-fade 0.8s ease 1.8s both; }
+    .hero__scroll svg { animation: hero-bob 2s ease-in-out 2.6s infinite; }
+  }
+  @keyframes hero-rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+  @keyframes hero-fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes hero-bob { 0%, 100% { transform: none; } 50% { transform: translateY(6px); } }
+
+  @media (max-width: 859px) {
+    .hero { min-height: clamp(600px, 92svh, 860px); }
+    .hero__img, .hero__video { object-position: 64% 50%; }
+    .hero__scrim {
+      background:
+        linear-gradient(0deg, rgb(14 58 32 / 0.95) 0%, rgb(14 58 32 / 0.8) 45%, rgb(14 58 32 / 0.35) 75%, rgb(14 58 32 / 0.5) 100%);
+    }
+    .hero__scroll { display: none; }
+  }
+</style>

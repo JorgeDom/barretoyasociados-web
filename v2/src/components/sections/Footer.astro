@@ -1,0 +1,72 @@
+---
+import Logo from '../ui/Logo.astro';
+import Arcs from '../decor/Arcs.astro';
+import { company, contact, nav } from '../../data/site';
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <Arcs class="footer__arcs" rings={5} sweep={220} />
+  <div class="container footer__grid">
+    <div class="footer__brand">
+      <Logo variant="white" />
+      <p>{company.legalName}<br />{company.descriptor}. Importación, exportación y maquila desde {company.foundingYear}.</p>
+    </div>
+
+    <nav aria-label="Secciones">
+      <h2 class="footer__title">Secciones</h2>
+      <ul class="footer__links">
+        {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div>
+      <h2 class="footer__title">Contacto</h2>
+      <address class="footer__contact">
+        <a href={contact.mapsLink} target="_blank" rel="noopener">{contact.addressLine1}, {contact.addressLine2}</a>
+        <a href={contact.phoneHref}>{contact.phoneDisplay}</a>
+        <a href={`mailto:${contact.email}`}>{contact.email}</a>
+      </address>
+    </div>
+  </div>
+
+  <div class="container footer__bottom">
+    <p>© {year} {company.legalName} Todos los derechos reservados.</p>
+    <a href="#inicio">Volver arriba</a>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    --focus: var(--white);
+    position: relative;
+    isolation: isolate;
+    overflow: clip;
+    background: var(--ink);
+    color: rgb(255 255 255 / 0.82);
+    padding-block: clamp(3.5rem, 7vw, 5.5rem) 2rem;
+    font-size: 0.975rem;
+  }
+  :global(.footer__arcs) { width: 520px; right: -200px; top: -240px; transform: rotate(180deg); color: var(--white); opacity: 0.08; }
+  .footer a { color: var(--white); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+  .footer__grid {
+    display: grid;
+    grid-template-columns: 1.4fr 0.8fr 1fr;
+    gap: 2.5rem;
+  }
+  .footer__brand { display: grid; gap: 1.25rem; align-content: start; }
+  .footer__brand p { max-width: 28em; }
+  .footer__title { font-size: 1rem; color: var(--white); margin-bottom: 1rem; letter-spacing: 0; }
+  .footer__links { display: grid; gap: 0.35rem; }
+  .footer__links a, .footer__contact a { display: inline-block; padding-block: 0.3rem; }
+  .footer__contact { font-style: normal; display: grid; gap: 0.35rem; overflow-wrap: anywhere; }
+  .footer__bottom {
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem;
+    margin-top: 3.5rem; padding-top: 1.5rem;
+    border-top: 1px solid rgb(255 255 255 / 0.15);
+    font-size: var(--step--1);
+    color: rgb(255 255 255 / 0.7);
+  }
+  @media (max-width: 859px) { .footer__grid { grid-template-columns: 1fr 1fr; } .footer__brand { grid-column: 1 / -1; } }
+  @media (max-width: 479px) { .footer__grid { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,128 @@
+---
+import Arcs from '../decor/Arcs.astro';
+import Media from '../ui/Media.astro';
+import { mission, vision, values } from '../../data/site';
+---
+<section class="section mvv" id="mision" aria-labelledby="mvv-title">
+  <div class="mvv__photo" aria-hidden="true">
+    <div class="mvv__photo-inner" data-parallax-local="0.12">
+      <Media file="mvv-bg.jpg" alt="" width={2400} height={1400} />
+    </div>
+  </div>
+  <Arcs class="mvv__arcs mvv__arcs--a" rings={5} sweep={250} />
+  <Arcs class="mvv__arcs mvv__arcs--b" rings={3} sweep={180} />
+
+  <div class="container">
+    <h2 id="mvv-title" class="visually-hidden">Misión, visión y valores</h2>
+
+    <div class="mvv__statements">
+      <article class="mvv__statement" data-reveal>
+        <h3>Misión</h3>
+        <p>{mission}</p>
+      </article>
+      <article class="mvv__statement" data-reveal style="--i:1">
+        <h3>Visión</h3>
+        <p>{vision}</p>
+      </article>
+    </div>
+
+    <div class="mvv__values">
+      <h3 data-reveal>Valores</h3>
+      <ul class="mvv__values-list">
+        {values.map((v, i) => <li data-reveal style={`--i:${i}`}>{v}</li>)}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .mvv {
+    --slant: clamp(28px, 5vw, 72px);
+    --focus: var(--white);
+    clip-path: polygon(0 var(--slant), 100% 0, 100% 100%, 0 100%);
+    margin-top: calc(var(--slant) * -1);
+    padding-top: calc(var(--section-y) + var(--slant));
+    background: var(--green-800);
+    color: var(--white);
+    overflow: clip;
+  }
+  /* Bright-green stripe along the slanted edge, fading out to the right */
+  .mvv::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: calc(var(--slant) + 10px);
+    background: var(--green-500);
+    clip-path: polygon(0 var(--slant), 100% 0, 100% 10px, 0 calc(var(--slant) + 10px));
+    -webkit-mask-image: linear-gradient(90deg, #000 30%, transparent 75%);
+    mask-image: linear-gradient(90deg, #000 30%, transparent 75%);
+    z-index: 1;
+  }
+  .mvv__photo { position: absolute; inset: 0; z-index: -1; overflow: hidden; }
+  .mvv__photo-inner { position: absolute; inset: -15% 0; will-change: transform; }
+  .mvv__photo-inner :global(.media) { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; aspect-ratio: auto !important; filter: grayscale(0.3); }
+  .mvv__photo-inner :global(.placeholder) { height: 100%; }
+  .mvv__photo::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(115deg, rgb(24 95 53 / 0.97) 0%, rgb(24 95 53 / 0.9) 45%, rgb(14 58 32 / 0.78) 100%);
+  }
+  .mvv h3 { color: var(--white); font-size: var(--step-1); }
+  :global(.mvv__arcs) { color: var(--white); opacity: 0.14; z-index: 0; }
+  :global(.mvv__arcs--a) { width: 720px; left: -300px; bottom: -380px; }
+  :global(.mvv__arcs--b) { width: 420px; right: -120px; top: -150px; transform: rotate(180deg); }
+  .mvv .container { position: relative; z-index: 1; }
+
+  .mvv__statements {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(2.5rem, 6vw, 6rem);
+  }
+  .mvv__statement { display: grid; gap: 1.25rem; align-content: start; }
+  .mvv__statement h3 {
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .mvv__statement h3::before {
+    content: '';
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--green-500);
+  }
+  .mvv__statement p {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(1.2rem, 1rem + 0.7vw, 1.5rem);
+    line-height: 1.55;
+    max-width: 30em;
+  }
+
+  .mvv__values {
+    margin-top: clamp(3.5rem, 7vw, 6rem);
+    padding-top: clamp(2rem, 4vw, 3rem);
+    border-top: 1px solid rgb(255 255 255 / 0.25);
+    display: grid;
+    grid-template-columns: minmax(0, 0.3fr) minmax(0, 1fr);
+    gap: 2rem;
+  }
+  .mvv__values-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.75rem 3rem;
+  }
+  .mvv__values-list li {
+    position: relative;
+    padding-left: 1.75rem;
+    line-height: 1.55;
+  }
+  .mvv__values-list li::before {
+    content: '';
+    position: absolute; left: 0; top: 0.55em;
+    width: 1rem; height: 2px;
+    background: var(--green-500);
+  }
+
+  @media (max-width: 859px) {
+    .mvv__statements, .mvv__values, .mvv__values-list { grid-template-columns: 1fr; }
+    .mvv__values { gap: 1.5rem; }
+  }
+</style>

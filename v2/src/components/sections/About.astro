@@ -1,0 +1,115 @@
+---
+import Media from '../ui/Media.astro';
+import Arcs from '../decor/Arcs.astro';
+import DotGrid from '../decor/DotGrid.astro';
+import YearsText from '../ui/YearsText.astro';
+import { about, company, clients } from '../../data/site';
+import { yearsSinceDate } from '../../lib/years';
+
+const age = yearsSinceDate(company.foundingDate);
+---
+<section class="section about" id="nosotros" aria-labelledby="about-title">
+  <div class="container">
+    <div class="about__grid">
+      <div class="about__copy">
+        <h2 id="about-title" data-reveal>Quiénes somos</h2>
+        <div class="prose about__prose">
+          {about.paragraphs.map((p, i) => <p data-reveal style={`--i:${i + 1}`}><YearsText text={p} /></p>)}
+        </div>
+      </div>
+      <div class="about__visual" data-reveal="fade">
+        <Arcs class="about__arcs" rings={3} sweep={160} />
+        <div class="about__frame">
+          <Media file="about-document.jpg" alt="Equipo de la agencia revisando documentación de una operación, con el puerto de fondo" width={1200} height={900} />
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-band" data-reveal="fade">
+    <Arcs class="stats-band__arcs" rings={4} sweep={200} />
+    <DotGrid class="stats-band__dots" cols={6} rows={4} />
+    <dl class="stats">
+      {about.stats.map((s, i) => (
+        <div class="stats__item" data-reveal style={`--i:${i}`}>
+          <dt class="stats__label"><YearsText text={s.label} /></dt>
+          <dd class="stats__value">
+            {s.kind === 'age' && <span data-count={age} data-years-since={company.foundingDate}>{age}</span>}
+            {s.kind === 'founded' && <span>{company.foundingYear}</span>}
+            {s.kind === 'clients' && <><span data-count={clients.length}>{clients.length}</span>{'suffix' in s && s.suffix}</>}
+          </dd>
+        </div>
+      ))}
+    </dl>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2.5rem, 6vw, 6rem);
+    align-items: center;
+  }
+  .about__copy { display: grid; gap: 1.75rem; }
+  .about__prose { font-size: var(--step-1); line-height: 1.6; }
+  .about__prose p:last-child { color: var(--ink-muted); font-size: var(--step-0); }
+
+  .about__visual { position: relative; max-width: 580px; justify-self: end; width: 100%; }
+  .about__frame {
+    border-radius: var(--radius-l) var(--radius-l) var(--radius-l) 160px;
+    overflow: hidden;
+  }
+  :global(.about__arcs) { width: 320px; left: -110px; bottom: -170px; color: var(--green-500); }
+
+  .stats-band {
+    --focus: var(--white);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    margin-top: clamp(4rem, 8vw, 6.5rem);
+    padding: clamp(2rem, 4vw, 3rem) clamp(1.5rem, 4vw, 3.5rem);
+    border-radius: var(--radius-l);
+    background: linear-gradient(120deg, var(--green-800) 55%, var(--green-900));
+    color: var(--white);
+  }
+  :global(.stats-band__arcs) { width: 340px; right: -90px; top: -20px; color: var(--white); opacity: 0.16; z-index: 0; }
+  :global(.stats-band__dots) { --dot-color: var(--white); left: 42%; bottom: -30px; z-index: 0; opacity: 0.18; }
+  .stats {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .stats__item {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 0.25rem clamp(1rem, 3vw, 2.5rem);
+    border-left: 1px solid rgb(255 255 255 / 0.22);
+  }
+  .stats__item:first-child { border-left: 0; padding-left: 0; }
+  .stats__value {
+    margin: 0;
+    font-size: clamp(3rem, 2rem + 4vw, 5.25rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--white);
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+  .stats__label { color: rgb(255 255 255 / 0.86); max-width: 18em; }
+
+  @media (max-width: 859px) {
+    :global(.stats-band__arcs) { display: none; }
+    .about__grid { grid-template-columns: 1fr; }
+    .about__visual { justify-self: start; max-width: 520px; }
+    .about__frame { border-bottom-left-radius: 96px; }
+    .stats { grid-template-columns: 1fr; }
+    .stats__item { border-left: 0; border-bottom: 1px solid rgb(255 255 255 / 0.22); padding: 1.25rem 0; flex-direction: row-reverse; align-items: baseline; justify-content: flex-end; gap: 1.25rem; }
+    .stats__item:last-child { border-bottom: 0; }
+    .stats__value { font-size: 3rem; min-width: 4ch; }
+  }
+</style>

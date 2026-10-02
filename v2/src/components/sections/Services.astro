@@ -1,0 +1,186 @@
+---
+// Services with photography. Desktop: list on the left, a sticky photo panel on the right that
+// crossfades to the service currently in view (or hovered). Mobile: each service carries its own
+// photo above the text. The panel is decorative (aria-hidden); the mobile images carry the alt text.
+import Media from '../ui/Media.astro';
+import Glow from '../decor/Glow.astro';
+import { services } from '../../data/site';
+---
+<section class="section services" id="servicios" aria-labelledby="services-title">
+  <Glow class="services__glow" />
+  <div class="container">
+    <div class="section-head">
+      <h2 id="services-title" data-reveal>Servicios</h2>
+      <p class="lede" data-reveal style="--i:1">{services.intro}</p>
+    </div>
+
+    <div class="services__grid" data-services>
+      <ol class="services__list">
+        {services.items.map((s, i) => (
+          <li class:list={['service', { 'is-active': i === 0 }]} data-service={i} data-reveal style={`--i:${i % 3}`}>
+            <div class="service__media">
+              <Media file={s.image} alt={s.alt} width={1200} height={800} />
+            </div>
+            <div class="service__body">
+              <h3>{s.title}</h3>
+              <p>{s.detail}</p>
+              {s.tags.length > 0 && (
+                <ul class="service__tags" aria-label="Instituciones y normativa">
+                  {s.tags.map((t) => <li class="tag">{t}</li>)}
+                </ul>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <div class="services__panel" aria-hidden="true" data-reveal="fade">
+        <div class="services__frame">
+          {services.items.map((s, i) => (
+            <figure class:list={['panel__slide', { 'is-active': i === 0 }]} data-slide={i}>
+              <Media file={s.image} alt="" width={1000} height={1200} />
+              <figcaption>{s.title}</figcaption>
+            </figure>
+          ))}
+          <div class="panel__progress">
+            {services.items.map((_, i) => <span class:list={{ 'is-active': i === 0 }} data-dot={i}></span>)}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-services]');
+  if (root) {
+    const items = [...root.querySelectorAll<HTMLElement>('[data-service]')];
+    const slides = [...root.querySelectorAll<HTMLElement>('[data-slide]')];
+    const dots = [...root.querySelectorAll<HTMLElement>('[data-dot]')];
+    let current = 0;
+
+    const setActive = (i: number) => {
+      if (i === current) return;
+      current = i;
+      [items, slides, dots].forEach((group) => group.forEach((el, n) => el.classList.toggle('is-active', n === i)));
+    };
+
+    // Active = the service crossing the middle band of the viewport.
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) if (e.isIntersecting) setActive(Number((e.target as HTMLElement).dataset.service));
+      },
+      { rootMargin: '-45% 0px -45% 0px' },
+    );
+    items.forEach((el) => {
+      io.observe(el);
+      el.addEventListener('mouseenter', () => setActive(Number(el.dataset.service)));
+    });
+  }
+</script>
+
+<style>
+  .services { overflow: clip; }
+  :global(.services__glow) { left: -260px; top: 18%; }
+
+  .services__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+  }
+
+  /* List */
+  .services__list { counter-reset: none; border-top: 1px solid var(--gray-100); }
+  .service {
+    position: relative;
+    display: grid;
+    align-content: center;
+    /* Each service holds the screen for a stretch of scroll so its photo has time to show */
+    min-height: clamp(200px, 32vh, 320px);
+    padding: clamp(1.75rem, 3.5vw, 2.75rem) 0 clamp(1.75rem, 3.5vw, 2.75rem) 1.5rem;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .service::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 1.75rem; bottom: 1.75rem;
+    width: 4px;
+    border-radius: 4px;
+    background: var(--green-500);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 450ms var(--ease-out);
+  }
+  .service.is-active::before { transform: scaleY(1); }
+  .service__body { display: grid; gap: 0.5rem; }
+  .service h3 {
+    font-size: var(--step-2);
+    color: var(--ink-muted);
+    transition: color 300ms ease;
+  }
+  .service.is-active h3 { color: var(--green-800); }
+  .service p { color: var(--ink-muted); }
+  .service__tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.4rem; }
+  .service__media { display: none; }
+
+  /* Sticky photo panel */
+  .services__panel { position: sticky; top: calc(var(--nav-h) + 1.5rem); }
+  .services__frame {
+    position: relative;
+    aspect-ratio: 5 / 6;
+    max-height: min(68svh, 660px);
+    width: 100%;
+    overflow: hidden;
+    border-radius: var(--radius-l) var(--radius-l) var(--radius-l) 160px;
+    background: var(--green-950);
+    box-shadow: 0 40px 80px -48px rgb(24 95 53 / 0.55);
+  }
+  .panel__slide {
+    position: absolute; inset: 0; margin: 0;
+    opacity: 0;
+    transition: opacity 700ms ease;
+  }
+  .panel__slide :global(.media) { width: 100%; height: 100%; object-fit: cover; aspect-ratio: auto !important; }
+  .panel__slide :global(.placeholder) { height: 100%; }
+  .panel__slide.is-active { opacity: 1; }
+  @media (prefers-reduced-motion: no-preference) {
+    .panel__slide :global(.media) { transform: scale(1.08); transition: transform 1.4s var(--ease-out); }
+    .panel__slide.is-active :global(.media) { transform: scale(1); }
+  }
+  .panel__slide figcaption {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 4rem 2rem 1.75rem 7rem;
+    background: linear-gradient(0deg, rgb(14 58 32 / 0.85), rgb(14 58 32 / 0));
+    color: var(--white);
+    font-weight: 600;
+    font-size: var(--step-1);
+    text-align: right;
+  }
+  .panel__progress {
+    position: absolute; top: 1.25rem; right: 1.25rem;
+    display: flex; gap: 6px;
+  }
+  .panel__progress span {
+    width: 22px; height: 4px; border-radius: 4px;
+    background: rgb(255 255 255 / 0.45);
+    transition: width 400ms var(--ease-out), background-color 400ms ease;
+  }
+  .panel__progress span.is-active { width: 44px; background: var(--white); }
+
+  /* Mobile / tablet: inline photo per service, no sticky panel */
+  @media (max-width: 959px) {
+    .services__grid { grid-template-columns: 1fr; }
+    .services__panel { display: none; }
+    .services__list { border-top: 0; display: grid; gap: 2.5rem; }
+    .service { padding: 0; border-bottom: 0; min-height: 0; }
+    .service::before { display: none; }
+    .service h3 { color: var(--green-800); font-size: var(--step-1); }
+    .service__media {
+      display: block;
+      margin-bottom: 1.1rem;
+      overflow: hidden;
+      border-radius: var(--radius-m) var(--radius-m) var(--radius-m) 64px;
+    }
+  }
+</style>

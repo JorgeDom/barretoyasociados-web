@@ -1,0 +1,20 @@
+---
+// Logo lockup: vector symbol (LogoMark) + the company name as live text.
+// variant="white" is for dark backgrounds (white arcs and text).
+import LogoMark from './LogoMark.astro';
+import { company } from '../../data/site';
+
+interface Props {
+  variant?: 'color' | 'white';
+  class?: string;
+}
+
+const { variant = 'color', class: className } = Astro.props;
+---
+<span class:list={['logo', `logo--${variant}`, className]}>
+  <LogoMark class="logo__symbol" tone={variant === 'white' ? 'light' : 'dark'} />
+  <span class="logo__name">
+    <strong>{company.shortName}</strong>
+    <span>{company.descriptor}</span>
+  </span>
+</span>
