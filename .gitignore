@@ -3,3 +3,6 @@ dist/
 .astro/
 .env
 .DS_Store
+
+# Local working notes (client terms and contacts) — keep out of the public repo
+HANDOFF.md

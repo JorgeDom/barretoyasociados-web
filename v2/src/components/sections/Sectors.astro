@@ -1,0 +1,145 @@
+---
+// Sectors the agency works with, as photo cards: the photo fills the card and the name and a line
+// of goods sit over it. Replaces the former client list (names and partnership years are not published).
+// Desktop: landscape cards in rows of 4 / 4 / 2, centered. Tablet: rows of 2.
+// Phone: one swipeable row, each card most of the screen wide so the next one peeks in.
+// Photos are decorative (alt=""); the heading carries the meaning. A card without its photo yet
+// falls back to a plain green surface, so the section never shows a broken slot.
+import DotGrid from '../decor/DotGrid.astro';
+import Arcs from '../decor/Arcs.astro';
+import { findPublicFile } from '../../lib/assets';
+import { sectors } from '../../data/site';
+
+const cards = sectors.map((s) => ({
+  ...s,
+  src: findPublicFile('images/rubros', s.image, ['jpg', 'jpeg', 'webp', 'png']),
+}));
+---
+<section class="section sectors" id="rubros" aria-labelledby="sectors-title">
+  <DotGrid class="sectors__dots" cols={8} rows={5} />
+  <Arcs class="sectors__arcs" rings={4} sweep={200} />
+  <div class="container">
+    <div class="section-head">
+      <h2 id="sectors-title" data-reveal>Rubros que atendemos</h2>
+      <p class="lede" data-reveal style="--i:1">
+        Empresas e instituciones de distintos sectores confían en nosotros, algunas desde hace más de tres décadas.
+      </p>
+    </div>
+
+    <ul class="sectors__grid">
+      {cards.map((s, i) => (
+        <li class:list={['sector', { 'sector--empty': !s.src }]} data-reveal style={`--i:${i % 4}`}>
+          {s.src && (
+            <div class="sector__media" data-parallax-local="0.04">
+              <img src={s.src} alt="" width="1536" height="1024" loading="lazy" decoding="async" />
+            </div>
+          )}
+          <div class="sector__copy">
+            <h3>{s.name}</h3>
+            <p>{s.goods}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .sectors { overflow: clip; background: var(--green-50); }
+  :global(.sectors__arcs) { width: 420px; left: -290px; bottom: -250px; color: var(--green-500); opacity: 0.6; }
+  :global(.sectors__dots) { right: max(1rem, calc(50% - 680px)); top: 4rem; }
+
+  /* Flex, not grid, so a short last row centers itself. */
+  .sectors__grid {
+    --cols: 4;
+    --gap: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--gap);
+  }
+  .sector {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    flex: 0 0 calc((100% - var(--gap) * (var(--cols) - 1)) / var(--cols));
+    aspect-ratio: 4 / 3;
+    display: flex;
+    align-items: flex-end;
+    padding: 1.1rem 1.25rem;
+    border-radius: var(--radius-m) 48px var(--radius-m) var(--radius-m);
+    background: linear-gradient(150deg, var(--green-800), var(--green-950));
+    box-shadow: 0 24px 40px -28px rgb(14 58 32 / 0.6);
+    color: var(--white);
+  }
+  /* The photo drifts slowly as the card crosses the screen (scripts/motion.ts, data-parallax-local).
+     It is taller than the card so the drift never uncovers an edge. */
+  .sector__media { position: absolute; inset: -16% 0; z-index: -2; will-change: transform; }
+  .sector__media img { width: 100%; height: 100%; object-fit: cover; }
+  /* Scrim: deep green rising from the bottom so the white copy always passes contrast. */
+  .sector::after {
+    content: '';
+    position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(0deg, rgb(14 58 32 / 0.95) 0%, rgb(14 58 32 / 0.72) 36%, rgb(14 58 32 / 0) 78%);
+  }
+  .sector--empty::after {
+    background: radial-gradient(circle at 100% 0%, rgb(13 169 75 / 0.28), rgb(13 169 75 / 0) 60%);
+  }
+
+  .sector__copy { display: grid; gap: 0.3rem; min-width: 0; }
+  .sector h3 {
+    color: var(--white);
+    font-size: 1.125rem;
+    line-height: 1.22;
+    text-shadow: 0 1px 12px rgb(0 0 0 / 0.3);
+  }
+  .sector h3::before {
+    content: '';
+    display: block;
+    width: 1.75rem; height: 3px;
+    margin-bottom: 0.6rem;
+    border-radius: 3px;
+    background: var(--green-500);
+  }
+  .sector p { font-size: 0.875rem; line-height: 1.35; color: rgb(255 255 255 / 0.88); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .sector__media img { transition: transform 900ms var(--ease-out); }
+    .sector:hover .sector__media img { transform: scale(1.06); }
+  }
+
+  @media (max-width: 1023px) {
+    .sectors__grid { --cols: 2; }
+    .sector { aspect-ratio: 3 / 2; padding: 1.25rem 1.4rem; }
+    .sector h3 { font-size: var(--step-1); }
+    .sector p { font-size: 0.95rem; }
+  }
+  @media (max-width: 859px) {
+    :global(.sectors__dots) { display: none; }
+  }
+  /* Phones: a swipeable row that bleeds to the screen edges. */
+  @media (max-width: 639px) {
+    .sectors__grid {
+      --gap: 0.75rem;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      margin-inline: calc(var(--gutter) * -1);
+      padding-inline: var(--gutter);
+      padding-bottom: 1.5rem; /* room for the card shadow inside the scroller */
+      scroll-padding-inline: var(--gutter);
+    }
+    .sectors__grid::-webkit-scrollbar { display: none; }
+    .sectors__grid .sector {
+      flex-basis: 78%;
+      aspect-ratio: 4 / 5;
+      scroll-snap-align: start;
+      border-top-right-radius: 56px;
+      /* cards arrive by swiping, so they skip the scroll reveal */
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

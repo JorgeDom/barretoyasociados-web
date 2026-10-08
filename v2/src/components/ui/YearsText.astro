@@ -3,13 +3,13 @@
 //   {edad}        → agency age, from company.foundingDate
 //   {alianzaMax}  → longest client partnership, in years
 // Each number is wrapped so scripts/years.ts can refresh it in the browser.
-import { company, clients } from '../../data/site';
+import { company, clientBase } from '../../data/site';
 import { yearsSinceDate, yearsSinceYear } from '../../lib/years';
 
 interface Props { text: string }
 const { text } = Astro.props;
 
-const oldestSince = Math.min(...clients.map((c) => c.since));
+const oldestSince = clientBase.oldestPartnershipSince;
 const tokens: Record<string, { value: number; attr: Record<string, string | number> }> = {
   edad: { value: yearsSinceDate(company.foundingDate), attr: { 'data-years-since': company.foundingDate } },
   alianzaMax: { value: yearsSinceYear(oldestSince), attr: { 'data-years-since-year': oldestSince } },

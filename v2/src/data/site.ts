@@ -32,7 +32,7 @@ export const nav = [
   { href: '#servicios', label: 'Servicios' },
   { href: '#historia', label: 'Historia' },
   { href: '#equipo', label: 'Equipo' },
-  { href: '#clientes', label: 'Clientes' },
+  { href: '#rubros', label: 'Rubros' },
   { href: '#contacto', label: 'Contacto' },
 ];
 
@@ -42,12 +42,19 @@ export const about = {
     'Acompañamos a cada cliente con un servicio personalizado, eficiente y seguro, basado en el cumplimiento normativo y la responsabilidad profesional.',
   ],
   // Numbers are derived at render time (see About.astro): 'age' from company.foundingDate,
-  // 'clients' from clients.length. Labels may use {edad} / {alianzaMax} tokens (YearsText.astro).
+  // 'clients' from clientBase.count. Labels may use {edad} / {alianzaMax} tokens (YearsText.astro).
   stats: [
     { kind: 'age', label: 'años de trayectoria en comercio exterior' },
     { kind: 'founded', label: 'año de constitución, el 18 de enero' },
     { kind: 'clients', suffix: '+', label: 'clientes, con alianzas de hasta {alianzaMax} años' },
   ] as const,
+};
+
+// Client names and individual partnership years are not published (client's decision).
+// Only these two aggregates appear on the page.
+export const clientBase = {
+  count: 36,
+  oldestPartnershipSince: 1989, // first year of the longest partnership; drives {alianzaMax}
 };
 
 export const services = {
@@ -113,6 +120,11 @@ export const differentiators = [
     text: 'Actuamos con justicia, sinceridad y transparencia en todas nuestras operaciones.',
     icon: 'icon-etica',
   },
+  {
+    title: 'Financiación',
+    text: 'Ofrecemos financiación con póliza de cumplimiento de contrato.',
+    icon: 'icon-financiacion',
+  },
 ];
 
 export const history = [
@@ -154,33 +166,56 @@ export const values = [
 export const teamIntro =
   'Nuestro equipo está integrado por profesionales con experiencia en comercio exterior y gestión aduanera, comprometidos con brindar un servicio eficiente y personalizado, acompañando cada operación con cercanía y conocimiento técnico.';
 
-export const team = [
-  { name: 'Mirtha Barreto', role: 'CEO · Fundadora', photo: 'team/Mirtha_Barreto.png' },
-  { name: 'Lic. Víctor Diez Pérez', role: 'CFO · Finanzas', photo: 'team/Victor_Diez_Perez.png' },
-  { name: 'Ing. Renato Barreto', role: 'Comercio exterior', photo: 'team/Renato_Barreto.png' },
-  { name: 'Carlos Troxler', role: 'Comercio exterior', photo: 'team/Carlos_Troxler.png' },
-  { name: 'David Ozuna', role: 'Comercio exterior · Maquila', photo: 'team/David_Ozuna.png' },
-  { name: 'Lic. Rocío Rodríguez', role: 'Recursos humanos', photo: 'team/Rocio_Rodriguez.png' },
+// Group photo above the directory. Until /public/images/equipo.jpg exists, a placeholder shows (ASSETS.md).
+export const teamPhoto = {
+  file: 'equipo.jpg',
+  alt: 'El equipo de Barreto y Asociados',
+};
+
+// Directory grouped by area (Team.astro). `phone` is the full international number, digits only.
+export const teamAreas = [
+  {
+    name: 'Directorio',
+    description: 'Dirección general de la agencia.',
+    members: [
+      { name: 'Mirtha Barreto', role: 'CEO · Despachante de Aduanas', email: 'mirtha@barretoyasociados.com.py', phone: '595981221206' },
+    ],
+  },
+  {
+    name: 'Gestión de Comercio Internacional',
+    description: 'Coordinación y seguimiento de las operaciones de importación, exportación y maquila.',
+    members: [
+      { name: 'Ing. Renato Barreto', role: 'Comercio exterior', email: 'rbarreto@barretoyasociados.com.py', phone: '595985440737' },
+      { name: 'Adriana Barreto', role: 'Comercio exterior', email: 'abarreto@barretoyasociados.com.py', phone: '595984912251' },
+      // [CONFIRM] The client's list gives the same e-mail for the next two people.
+      { name: 'Juan Carlos González', role: 'Comercio exterior', email: 'nbarreto@barretoyasociados.com.py', phone: '595984915809' },
+      { name: 'Lilian Escobar', role: 'Comercio exterior', email: 'nbarreto@barretoyasociados.com.py', phone: '595986168555' },
+    ],
+  },
+  {
+    name: 'Administración y Finanzas',
+    description: 'Gestión administrativa, financiera y de recursos humanos.',
+    members: [
+      { name: 'Lic. Víctor Diez Pérez', role: 'CFO · Finanzas', email: 'vdiez@barretoyasociados.com.py', phone: '595984949589' },
+      { name: 'Lic. Rocío Rodríguez', role: 'Recursos humanos', email: 'contabilidad@barretoyasociados.com.py', phone: '595984912733' },
+    ],
+  },
 ];
 
-// `since` = first year of the partnership; years are calculated from it (Clients.astro).
-// Derived from the 2026 presentation's "años de alianza" as 2026 − years. [CONFIRM with client]
-// Sorted by partnership length (longest first) when rendered.
-export const clients = [
-  { name: 'ENVACO S.A.', sector: 'Importación y exportación de papel y cartón corrugado', since: 1995 },
-  { name: 'Industrias Gráficas Nobel S.A.', sector: 'Importación de productos para gráfica', since: 1995 },
-  { name: 'La Iglesia de Jesucristo de los Santos de los Últimos Días', sector: 'Importaciones por Ley 302/93 y exportaciones varias', since: 1989 },
-  { name: 'Asociación de Mejoramiento Mutuo', sector: 'Importación, exportación y maquila de prendas de vestir', since: 1996 },
-  { name: 'Preferida S.A.C.I.', sector: 'Maquila de prendas de vestir', since: 2019 },
-  { name: 'Láminas Internacionales S.A.', sector: 'Maquila de madera multilaminada', since: 2015 },
-  { name: 'Ferretería Industrial S.A.E.', sector: 'Maquinarias agrícolas y productos de ferretería', since: 2024 },
-  { name: 'Hornimac S.R.L.', sector: 'Congeladoras y estanterías metálicas', since: 1999 },
-  { name: 'Altona Woods', sector: 'Exportación de madera', since: 2024 },
-  { name: 'Centro Familiar de Adoración', sector: 'Importación por Ley 302/93 (mercaderías varias)', since: 2009 },
-  { name: 'Copipunto S.A.', sector: 'Productos y equipos para imprenta', since: 2012 },
-  { name: 'Casa Otto Import – Export S.R.L.', sector: 'Importación de granos', since: 2014 },
-  { name: 'Harz S.R.L.', sector: 'Maquila de resinas PVC y estabilizantes', since: 2024 },
-  { name: 'Salinas Textil', sector: 'Maquila de mantas y alfombras', since: 2020 },
-  { name: 'Amambay Preformas S.A.', sector: 'Maquila de preformas de envases', since: 2020 },
-  { name: 'Saron International S.A.', sector: 'Maquila textil', since: 2018 },
+// Sectors served, shown instead of a client list. `image` is a base name under
+// /public/images/rubros/ (any of .jpg/.webp/.png); a plain green card shows until the file exists.
+// `goods` is one short line under the name (keep it to about 30 characters so it fits on one line).
+// Names and goods are a draft derived from the sectors of the clients in
+// barreto-y-asociados-info.md. [CONFIRM with client]
+export const sectors = [
+  { name: 'Papel y cartón', goods: 'Papel y cartón corrugado', image: 'papel-carton' },
+  { name: 'Industria gráfica e imprenta', goods: 'Insumos y equipos de imprenta', image: 'grafica-imprenta' },
+  { name: 'Textil y confecciones', goods: 'Prendas, mantas y alfombras', image: 'textil-confecciones' },
+  { name: 'Madera y derivados', goods: 'Madera aserrada y multilaminada', image: 'madera' },
+  { name: 'Maquinaria agrícola', goods: 'Maquinarias para el agro', image: 'maquinaria-agricola' },
+  { name: 'Ferretería industrial', goods: 'Productos de ferretería', image: 'ferreteria-industrial' },
+  { name: 'Granos', goods: 'Importación de granos', image: 'granos' },
+  { name: 'Plásticos, resinas y envases', goods: 'Resinas PVC y preformas', image: 'plasticos-envases' },
+  { name: 'Refrigeración y equipamiento comercial', goods: 'Congeladoras y estanterías', image: 'refrigeracion-equipamiento' },
+  { name: 'Entidades sin fines de lucro', goods: 'Importaciones por Ley 302/93', image: 'sin-fines-de-lucro' },
 ];

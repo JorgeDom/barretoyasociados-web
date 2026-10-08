@@ -4,8 +4,8 @@ Two versions of the site live side by side, each a self-contained Astro project:
 
 | Folder | What it is |
 |---|---|
-| `v1/` | The version live at barretoyasociados-web.pages.dev (as of 2026-09-29). |
-| `v2/` | Client feedback round: full-bleed photo hero with animated logo, services with photos, photo band, image behind Misión/Visión. |
+| `v1/` | Legacy, kept for reference only. Not deployed. |
+| `v2/` | The version live at barretoyasociados-web.pages.dev (as of 2026-10-06). Client feedback round: full-bleed photo hero with animated logo, services with photos, photo band, image behind Misión/Visión. |
 
 Run either one:
 

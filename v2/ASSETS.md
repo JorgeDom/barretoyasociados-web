@@ -85,5 +85,31 @@ Square (1:1), head and shoulders, cropped from the top. 800 × 800 ideal; the re
 | `band-port.jpg` | 2400 × 1000 ideal | Photo band (Importación. Exportación. Maquila.) | ✅ new AI image, sunset port (1916 × 821), 2026-10-02 |
 | `mvv-bg.jpg` | 2400 × 1400 ideal | Behind Misión/Visión (under a green overlay) | ✅ new AI image, office overlooking the port (2400 × 1350), 2026-10-02 |
 
+| `equipo.jpg` | 1600 × 900 (16:9) | Conozca al equipo, group photo above the staff directory | ⏳ pending from the client (requested 2026-10-06). A labeled placeholder shows until the file exists. Landscape; keep people away from the top-right corner, which is rounded off. |
+| `/public/icons/icon-financiacion.svg` | 44 × 44 | Qué nos diferencia | ✅ drawn in code as a suggestion (policy document with a shield and check), 2026-10-06. Replace the file to change it. |
+
+The six individual portraits in `images/team/` are no longer shown: the team section is now one group photo plus a directory (names, roles, e-mails and phones in `src/data/site.ts`).
+
+## Rubros photos — `public/images/rubros/`
+
+One photo per rubro, shown as a card with the name over the image. Landscape **3:2, 1536 × 1024** (ChatGPT's landscape size); `.jpg`, `.png` or `.webp`. Until a file exists, its card is a plain green surface, so the section can be published incomplete.
+
+The same photo is cropped three ways: 4:3 on desktop, 3:2 on tablets and a vertical 3:4 slice from the center on phones. So use wide scenes, keep the interesting part in the center third, and keep the bottom third calm (the name sits there over a green fade).
+
+| File | Rubro | Status |
+|---|---|---|
+| `rubros/papel-carton` | Papel y cartón | ✅ AI image (ChatGPT), 2026-10-08, `.png` |
+| `rubros/grafica-imprenta` | Industria gráfica e imprenta | ✅ AI image (ChatGPT), 2026-10-08, `.png` |
+| `rubros/textil-confecciones` | Textil y confecciones | ✅ AI image (ChatGPT), 2026-10-08, `.png` |
+| `rubros/madera` | Madera y derivados | ✅ AI image (ChatGPT), 2026-10-08, `.png` |
+| `rubros/maquinaria-agricola` | Maquinaria agrícola | ✅ AI image (ChatGPT), 2026-10-08, `.png` |
+| `rubros/ferreteria-industrial` | Ferretería industrial | ✅ AI image (ChatGPT), 2026-10-08, `.png` |
+| `rubros/granos` | Granos | ✅ AI image (ChatGPT), 2026-10-08, `.png` |
+| `rubros/plasticos-envases` | Plásticos, resinas y envases | ✅ AI image (ChatGPT), 2026-10-08, `.png` |
+| `rubros/refrigeracion-equipamiento` | Refrigeración y equipamiento comercial | ✅ AI image (ChatGPT), 2026-10-08, `.png` |
+| `rubros/sin-fines-de-lucro` | Entidades sin fines de lucro | ✅ AI image (ChatGPT), 2026-10-08, `.png` |
+
+Base names are set in `sectors` in `src/data/site.ts`.
+
 The services panel crops to 5:6 on desktop and 3:2 on mobile, so keep the subject centered.
 Service icons were removed from v2 (Servicios uses photos now). The logo is now drawn in code (`src/components/ui/LogoMark.astro`), so `logo.png` is no longer used on the page.

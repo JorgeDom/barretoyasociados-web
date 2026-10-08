@@ -9,6 +9,7 @@ import sharp from 'sharp';
 const RULES = [
   { test: /^images\/logo[^/]*\.png$/, trim: true, height: 160 },
   { test: /^images\/team\//, width: 800, height: 800, fit: 'cover', position: 'top', photo: true },
+  { test: /^images\/equipo\./, max: 2000, photo: true }, // team group photo, shown at container width
   { test: /^images\/hero-wide/, max: 2560 },
   { test: /^images\/(band-port|mvv-bg)\./, max: 2400 }, // full-bleed section backgrounds // full-bleed hero: pre-sized variants (960/1600/2560) in /public
   { test: /^images\/og-image\./, width: 1200, height: 630, fit: 'cover' },

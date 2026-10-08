@@ -3,7 +3,7 @@ import Media from '../ui/Media.astro';
 import Arcs from '../decor/Arcs.astro';
 import DotGrid from '../decor/DotGrid.astro';
 import YearsText from '../ui/YearsText.astro';
-import { about, company, clients } from '../../data/site';
+import { about, company, clientBase } from '../../data/site';
 import { yearsSinceDate } from '../../lib/years';
 
 const age = yearsSinceDate(company.foundingDate);
@@ -35,7 +35,7 @@ const age = yearsSinceDate(company.foundingDate);
           <dd class="stats__value">
             {s.kind === 'age' && <span data-count={age} data-years-since={company.foundingDate}>{age}</span>}
             {s.kind === 'founded' && <span>{company.foundingYear}</span>}
-            {s.kind === 'clients' && <><span data-count={clients.length}>{clients.length}</span>{'suffix' in s && s.suffix}</>}
+            {s.kind === 'clients' && <><span data-count={clientBase.count}>{clientBase.count}</span>{'suffix' in s && s.suffix}</>}
           </dd>
         </div>
       ))}
